@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Automatizar Consulta",
+  "version": "1.0",
+  "description": "Una extensión que automatiza la consulta de vehiculos por numero de placa.",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
