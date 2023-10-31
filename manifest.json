@@ -3,8 +3,15 @@
   "name": "Automatizar Consulta",
   "version": "1.0",
   "description": "Una extensión que automatiza la consulta de vehiculos por numero de placa.",
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "identity"],
   "action": {
     "default_popup": "popup.html"
-  }
+  },
+  "sandbox": {
+		"pages": ["sandbox.html"]
+	},
+  "content_security_policy": {
+		"sandbox": "sandbox allow-scripts; script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com"
+	}
 }
+
