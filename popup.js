@@ -1,31 +1,3 @@
-// popup.js
-
-// const { obtenerNumerosDePlaca } = require('./firebaseFirestore'); // Importa la función 'obtenerNumerosDePlaca'
-// import { obtenerNumerosDePlaca } from './firebaseFirestore';
-// const obtenerNumerosDePlaca = require('./firebaseFirestore');
-
-// const { obtenerNumerosDePlaca } = require('./firebaseFirestore');
-/* const firebaseConfig = {
-  apiKey: "AIzaSyCrHSBkkDtgv5zmdQnaxtPp2ftehhPUkqU",
-  authDomain: "proyectplateregistration.firebaseapp.com",
-  databaseURL: "https://proyectplateregistration-default-rtdb.firebaseio.com",
-  projectId: "proyectplateregistration",
-  storageBucket: "proyectplateregistration.appspot.com",
-  messagingSenderId: "1091378837166",
-  appId: "1:1091378837166:web:79133e45a006015b485f3f",
-  measurementId: "G-YLGDWC3H2P"
-};
-firebase.initializeApp(firebaseConfig);
-function initApp() {
-  firebase.auth().onAuthStateChanged(function(user) {
-    console.log('User state change detected from the Background script of the Chrome Extension:', user);
-  });
-}
-window.onload = function() {
-  initApp();
-}; */
-
-
 document.getElementById('startAutomation').addEventListener('click', function () {
   console.log("Botón 'Iniciar Automatización' clickeado.");
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -34,14 +6,6 @@ document.getElementById('startAutomation').addEventListener('click', function ()
       target: { tabId: tabs[0].id },
       function: () => {
         console.log("Detectando campo de entrada...");
-     
-        // const plates = await obtenerNumerosDePlaca(); // Obtén las placas desde Firestore
-        // console.log("Placas", plates);
-
-        obtenerNumerosDePlaca().then((placas) => {
-          console.log("Placas", placas);
-          // Realiza acciones con los datos obtenidos de Firestore.
-        });
         const input = document.getElementById('ConsultarAutomotorForm:automotorPlacaNumplaca');
         if (input) {
           console.log("Campo de entrada encontrado.");
