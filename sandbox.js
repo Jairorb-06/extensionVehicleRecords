@@ -21,53 +21,33 @@ async function fetchData() {
 	  // Consulta la colección "plates" de Firestore
 	  const platesCollection = firestore.collection("plates");
 	  const querySnapshot = await platesCollection.get();
-  
+	  const local = {};
+
+	  const platesData = [];
 	  querySnapshot.forEach((doc) => {
 		// Supongamos que los datos se encuentran en un campo llamado "columnData"
 		const columnData = doc.data().columnData;
   
 		if (Array.isArray(columnData)) {
 		  for (const plate of columnData) {
-			console.log(plate);
+			platesData.push(plate);
+			
 		  }
+		  // Después de obtener las placas
+		window.parent.postMessage({ platesData }, "*");
+		
+		  console.log('Placas obtenidas en sandbox.js:', platesData);
+		  
+		
 		} else {
 		  console.log("No se encontraron datos de placas.");
 		}
 	  });
+
 	} catch (error) {
 	  console.error("Error al consultar la colección 'plates':", error);
 	}
   }
   
   fetchData(); // Llama a la función para iniciar la consulta
-
-/* window.addEventListener("message", async (event) => {
-	if (event.data === "init") {
-	  const app = firebase.initializeApp(config);
-	  console.log("Initialized Firebase!", app);
   
-	  // Inicializa Firebase Firestore
-	  const firestore = firebase.firestore();
-  
-	  try {
-		// Consulta la colección "plates" de Firestore
-		const platesCollection = firestore.collection("plates");
-		const querySnapshot = await platesCollection.get();
-  
-		querySnapshot.forEach((doc) => {
-		  // Supongamos que los datos se encuentran en un campo llamado "columnData"
-		  const columnData = doc.data().columnData;
-  
-		  if (Array.isArray(columnData)) {
-			for (const plate of columnData) {
-			  console.log(plate);
-			}
-		  } else {
-			console.log("No se encontraron datos de placas.");
-		  }
-		});
-	  } catch (error) {
-		console.error("Error al consultar la colección 'plates':", error);
-	  }
-	}
-  }); */
