@@ -4,16 +4,20 @@
     // Haz algo con el arreglo en popup.js
     console.log("placas en popup.js",platesData); 
   }
-}); */
+}); 
+ */
+
+
 
 window.addEventListener("message", function(event) {
   if (event.data.platesData) {
-    const platesData = event.data.platesData;
-    console.log("placas en popup.js", platesData);
+    const platesData = event.data.platesData;    
     document.getElementById('startAutomation').addEventListener('click', function () {
       console.log("Botón 'Iniciar Automatización' clickeado.");
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         console.log("Extensión button clicked.");
+       
+                 
         chrome.scripting.executeScript({
           target: { tabId: tabs[0].id },
           function: (platesData) => {
@@ -23,9 +27,10 @@ window.addEventListener("message", function(event) {
             const placas = platesData;
             //  aqui debo recibir las placas de sandbox  
             const input = document.getElementById('ConsultarAutomotorForm:automotorPlacaNumplaca');
-            if (input) {
+            if (!input) {
               console.log("Campo de entrada encontrado.");
-              console.log("placas", placas)
+              console.log("placas en popup.js", platesData);
+         
           const placs = [
             "RZV652",
             "WIB13D",
@@ -38,9 +43,14 @@ window.addEventListener("message", function(event) {
             "WIE11D",
             "SKG115"
           ];
-          console.log("placs", placs)
-          // const plates = await obtenerNumerosDePlaca();
-          let currentIndex = 0;
+         
+         /*  setTimeout(function () {
+            window.frames[0].postMessage({ placs: placas }, "*");
+            console.log("placas", placas);
+          }, 2000);
+          let currentIndex = 0; */
+         
+         
 
           function insertPlacaAndTab() {
             if (currentIndex < placas.length) {
@@ -87,6 +97,26 @@ window.addEventListener("message", function(event) {
             // ...
           }, args: [platesData] // Pasa platesData como argumento
         });
+
+
+        /* const placs = [
+          "RZV652",
+          "WIB13D",
+          "185NCL",
+          "IHA03F",
+          "WIE09D",
+          "WIE25D",
+          "BSU727",
+          "NEB725",
+          "WIE11D",
+          "SKG115"
+        ];
+       
+        setTimeout(function () {
+          window.frames[0].postMessage({ placs: placs }, "*");
+          console.log("placas", placs);
+        }, 200);
+        let currentIndex = 0; */
       });
     });
 
@@ -139,6 +169,36 @@ window.addEventListener("message", function(event) {
     
   }
 });
+//este aqui ya no iria
+const placs = [
+  "RZV652",
+  "WIB13D",
+  "185NCL",
+  "IHA03F",
+  "WIE09D",
+  "WIE25D",
+  "BSU727",
+  "NEB725",
+  "WIE11D",
+  "SKG115"
+];
+// const iframe = document.getElementById('iframe');
+// chrome.runtime.sendMessage({ data: placs });
+// iframe.contentWindow.postMessage({ placsData: placs }, "*");
+// window.parent.postMessage({ placs: placs }, "*");
+
+/* //para enviar objeto
+const placsData = {
+  placs: placs
+}; 
+window.frames[0].postMessage(JSON.stringify(placsData), "*");
+*/
+
+setTimeout(function () {
+  window.frames[0].postMessage({ placs: placs }, "*");
+  // window.frames[0].postMessage(JSON.stringify(placsData), "*");
+  console.log("placs", placs);
+}, 2000); 
 
 /* 
 document.getElementById('startAutomation').addEventListener('click', function () {
