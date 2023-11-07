@@ -9,6 +9,15 @@ document.getElementById('startAutomation').addEventListener('click', function ()
         const input = document.getElementById('ConsultarAutomotorForm:automotorPlacaNumplaca');
         if (input) {
           console.log("Campo de entrada encontrado.");
+          
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "enviarListadoPlacas") {
+    const placas = message.placas;
+    console.log("Listado de placas recibido en popup.js:", placas);
+  }
+});
+
           const placas = [
             "RZV652",
             "WIB13D",

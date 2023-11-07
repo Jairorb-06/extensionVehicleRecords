@@ -25,11 +25,11 @@ async function fetchData() {
 	  querySnapshot.forEach((doc) => {
 		// Supongamos que los datos se encuentran en un campo llamado "columnData"
 		const columnData = doc.data().columnData;
-  
+		//chrome.runtime.sendMessage({ action: "enviarListadoPlacas", placas: columnData });
 		if (Array.isArray(columnData)) {
 		  for (const plate of columnData) {
 			console.log(plate);
-		  }
+		}
 		} else {
 		  console.log("No se encontraron datos de placas.");
 		}
