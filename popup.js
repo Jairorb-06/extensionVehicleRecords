@@ -11,46 +11,26 @@
 
 window.addEventListener("message", function(event) {
   if (event.data.platesData) {
-    const platesData = event.data.platesData;    
-    document.getElementById('startAutomation').addEventListener('click', function () {
-      console.log("Botón 'Iniciar Automatización' clickeado.");
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        console.log("Extensión button clicked.");
-       
-                 
-        chrome.scripting.executeScript({
-          target: { tabId: tabs[0].id },
-          function: (platesData) => {
-            console.log("Detectando campo de entrada...");
+    const platesData = event.data.platesData;
+document.getElementById('startAutomation').addEventListener('click', function () {
+  console.log("Botón 'Iniciar Automatización' clickeado.");
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    console.log("Extensión button clicked.");
 
-            // Usa las placas recibidas desde sandbox.js en lugar de la matriz hardcodeada
-            const placas = platesData;
-            //  aqui debo recibir las placas de sandbox  
-            const input = document.getElementById('ConsultarAutomotorForm:automotorPlacaNumplaca');
-            if (!input) {
-              console.log("Campo de entrada encontrado.");
-              console.log("placas en popup.js", platesData);
-         
-          const placs = [
-            "RZV652",
-            "WIB13D",
-            "185NCL",
-            "IHA03F",
-            "WIE09D",
-            "WIE25D",
-            "BSU727",
-            "NEB725",
-            "WIE11D",
-            "SKG115"
-          ];
-         
-         /*  setTimeout(function () {
-            window.frames[0].postMessage({ placs: placas }, "*");
-            console.log("placas", placas);
-          }, 2000);
-          let currentIndex = 0; */
-         
-         
+    chrome.scripting.executeScript({
+      target: { tabId: tabs[0].id },
+      function: (platesData) => {
+        console.log("Detectando campo de entrada...");
+
+        // Usa las placas recibidas desde sandbox.js en lugar de la matriz hardcodeada
+        const placas = platesData;
+        console.log(placas);
+
+        //  aqui debo recibir las placas de sandbox
+        const input = document.getElementById('ConsultarAutomotorForm:automotorPlacaNumplaca');
+        if (!input) {
+          console.log("Campo de entrada encontrado.");
+          console.log("placas en popup.js", platesData);
 
           function insertPlacaAndTab() {
             if (currentIndex < placas.length) {
@@ -87,54 +67,41 @@ window.addEventListener("message", function(event) {
               console.log("Automatización completada!");
             }
           }
-
+          chrome.runtime.sendMessage({ type: 'platesData', plates: placas });
           insertPlacaAndTab();
         } else {
           console.log("Campo de entrada no encontrado.");
         }
-
-            // Resto del código de automatización...
-            // ...
-          }, args: [platesData] // Pasa platesData como argumento
-        });
-
-
-        /* const placs = [
-          "RZV652",
-          "WIB13D",
-          "185NCL",
-          "IHA03F",
-          "WIE09D",
-          "WIE25D",
-          "BSU727",
-          "NEB725",
-          "WIE11D",
-          "SKG115"
-        ];
-       
-        setTimeout(function () {
-          window.frames[0].postMessage({ placs: placs }, "*");
-          console.log("placas", placs);
-        }, 200);
-        let currentIndex = 0; */
-      });
+      }, args: [platesData] // Pasa platesData como argumento
     });
+
+     /* // Imprime el arreglo de placas en la consola de la extensión
+     console.log("imprime en el contexto de la extension")
+    //  console.log("Arreglo de placas en la consola de la extensión:", placas);
+    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+      if (message.type === 'platesData') {
+        console.log("Arreglo de placas en la consola de la extensión:", message.plates);
+      }
+    });  */   
+  });
+});
+
 
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
         console.log("Página recargada. Esperando antes de buscar el botón 'Generar Historial'...");   
         setTimeout(function () {
-          console.log("Espera completada. Guardando contenido de la consulta en localStorage...");
+          // console.log("Espera completada. Guardando contenido de la consulta en localStorage...");
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
             function: () => {          
-              const fechaLicenciaContent = document.getElementById('ConsultarAutomotorForm:fechaLicencia2').textContent;
+              /* const fechaLicenciaContent = document.getElementById('ConsultarAutomotorForm:fechaLicencia2').textContent;
               if (fechaLicenciaContent) {           
                 localStorage.setItem('fechaLicenciaContent', fechaLicenciaContent);
                 console.log("Contenido de la fecha de licencia guardado en localStorage.");
               } else {
                 console.log("No se encontró la etiqueta con id 'ConsultarAutomotorForm:fechaLicencia2'.");
-              }
+              } */
               const generarHistorialButton = document.getElementById('ConsultarAutomotorForm:btnAction2');
               if (generarHistorialButton) {
                 generarHistorialButton.click(); 
@@ -170,7 +137,7 @@ window.addEventListener("message", function(event) {
   }
 });
 //este aqui ya no iria
-const placs = [
+/* const placs = [
   "RZV652",
   "WIB13D",
   "185NCL",
@@ -181,7 +148,7 @@ const placs = [
   "NEB725",
   "WIE11D",
   "SKG115"
-];
+]; */
 // const iframe = document.getElementById('iframe');
 // chrome.runtime.sendMessage({ data: placs });
 // iframe.contentWindow.postMessage({ placsData: placs }, "*");
@@ -194,12 +161,12 @@ const placsData = {
 window.frames[0].postMessage(JSON.stringify(placsData), "*");
 */
 
-setTimeout(function () {
+/* setTimeout(function () {
   window.frames[0].postMessage({ placs: placs }, "*");
   // window.frames[0].postMessage(JSON.stringify(placsData), "*");
   console.log("placs", placs);
 }, 2000); 
-
+ */
 /* 
 document.getElementById('startAutomation').addEventListener('click', function () {
   console.log("Botón 'Iniciar Automatización' clickeado.");
