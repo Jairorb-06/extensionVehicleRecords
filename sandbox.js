@@ -29,49 +29,37 @@ const config = {
 firebase.initializeApp(config);
 
 window.addEventListener("message", function(event) {
-  console.log("Respuesta recibida en sandbox.js:", event);
-  /* if (event.isTrusted && event.data) {
-    try {
-      const data = JSON.parse(event.data);
-      if (data.placs) {
-        const placs = data.placs;
-        console.log("Respuesta recibida en sandbox.js:", placs);
-      const firestore = firebase.firestore();
-      const respuestasCollection = firestore.collection("respuestas");
-      respuestasCollection.add({
-        placs: placs,
-      })
-      .then((docRef) => {
-        console.log("Respuesta guardada en Firestore con ID: ", docRef.id);
-      })
-      .catch((error) => {
-        console.error("Error al guardar la respuesta en Firestore: ", error);
-      });
-      }
-    } catch (error) {
-      console.error("Error al analizar el mensaje JSON:", error);
-    }
-  } */
-    if (event.data.placs) {
-      const placs = event.data.placs;
-      console.log("Respuesta recibida en sandbox.js:", placs);  
-      // Guardar la respuesta en Firestore
-      const firestore = firebase.firestore();  
-      // Colección en Firestore donde deseas guardar las respuestas
-      const respuestasCollection = firestore.collection("respuestas");
-      // Agrega la respuesta a la colección
-      respuestasCollection.add({
-        placs: placs,
-      })
-      .then((docRef) => {
-        console.log("Respuesta guardada en Firestore con ID: ", docRef.id);
-      })
-      .catch((error) => {
-        console.error("Error al guardar la respuesta en Firestore: ", error);
-      });
-    }
- 
+  //console.log("Respuesta recibida en sandbox.js:", event.data);
+  try {
+    // Parsear la cadena JSON
+    const datos = JSON.parse(event.data);
+
+    // Acceder a cada objeto por separado
+    const datosBasicos = datos.datosBasicos || {};
+    const infoVehiculo = datos.infoVehiculo || {};
+
+    // Imprimir los resultados
+    console.log("Datos Básicos:", datosBasicos);
+    console.log("Info Vehículo:", infoVehiculo);
+
+    // Enviar a Firestore
+    const firestore = firebase.firestore();
+    const respuestasCollection = firestore.collection("respuestas");
+    respuestasCollection.add({
+      datosBasicos: datosBasicos,
+      infoVehiculo: infoVehiculo,
+    })
+    .then((docRef) => {
+      console.log("Respuesta guardada en Firestore con ID:", docRef.id);
+    })
+    .catch((error) => {
+      console.error("Error al guardar la respuesta en Firestore:", error);
+    });
+  } catch (error) {
+    console.error("Error al analizar el mensaje JSON:", error);
+  }
 });
+
 
 async function fetchData() {
   const app = firebase.initializeApp(config);
