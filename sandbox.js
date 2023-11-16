@@ -37,7 +37,8 @@ window.addEventListener("message", function(event) {
     // Acceder a cada objeto por separado
     const datosBasicos = datos.datosBasicos || {};
     const infoVehiculo = datos.infoVehiculo || {};
-
+    const datosSoat= datos.datosSoat || {};
+    const datosPropietario= datos.datosPropietario || {};
     // Imprimir los resultados
     console.log("Datos Básicos:", datosBasicos);
     console.log("Info Vehículo:", infoVehiculo);
@@ -48,6 +49,8 @@ window.addEventListener("message", function(event) {
     respuestasCollection.add({
       datosBasicos: datosBasicos,
       infoVehiculo: infoVehiculo,
+      datosSoat: datosSoat,
+      datosPropietario: datosPropietario,
     })
     .then((docRef) => {
       console.log("Respuesta guardada en Firestore con ID:", docRef.id);

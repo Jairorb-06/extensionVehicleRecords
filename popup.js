@@ -94,7 +94,6 @@ window.addEventListener("message", function (event) {
         );
       });
 
-
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
         console.log("Página recargada. Guardando contenido de las tablas...");
@@ -132,9 +131,7 @@ window.addEventListener("message", function (event) {
               }
               console.log("Datos Básicos:", datosBasicos);
 
-              var tablaInfoVehiculo = document.getElementById(
-                "ConsultarAutomotorForm:pGridContentInputColumns2"
-              );
+              var tablaInfoVehiculo = document.getElementById("ConsultarAutomotorForm:pGridContentInputColumns2");
               var infoVehiculo = {};
 
               if (tablaInfoVehiculo) {
@@ -172,14 +169,86 @@ window.addEventListener("message", function (event) {
                     }
                   }
                 }
-
               }
               console.log("Info Vehículo:", infoVehiculo);
+
+              var tablaSoat = document.getElementById(
+                "ConsultarAutomotorForm:pagedTableSoat"
+              );
+              var datosSoat = {};
+              if (tablaSoat) {
+                var filasSoat = tablaSoat.querySelectorAll("tr.row, tr.row_odd");
+                var nombresColumnas = [];
+                var encabezadoSoat = tablaSoat.querySelector("thead");
+                if (encabezadoSoat) {
+                  var celdasEncabezadoSoat =
+                    encabezadoSoat.querySelectorAll("th");
+                  celdasEncabezadoSoat.forEach(function (celda) {
+                    nombresColumnas.push(celda.textContent.trim());
+                    datosSoat[celda.textContent.trim()] = [];
+                  });
+                }
+                for (var i = 0; i < filasSoat.length; i++) {
+                  var celdasSoat = filasSoat[i].querySelectorAll("td");
+                  for (var j = 0; j < celdasSoat.length; j++) {
+                    var contenidoSoat = celdasSoat[j].textContent.trim();
+                    datosSoat[nombresColumnas[j]].push(contenidoSoat);
+                  }
+                }
+              }
+              console.log("Datos SOAT:", datosSoat);
+
+              var tablaRevisionTM = document.getElementById('ConsultarAutomotorForm:panelResultRevisionTM');
+              var datosRevisionTM = {};
+              if (tablaRevisionTM) {
+                var filasRevisionTM = tablaRevisionTM.querySelectorAll('tr.row, tr.row_odd');
+                for (var i = 0; i < filasRevisionTM.length; i++) {
+                  var celdasRevisionTM = filasRevisionTM[i].querySelectorAll('td');
+                  for (var j = 0; j < celdasRevisionTM.length; j++) {
+                    var contenidoRevisionTM = celdasRevisionTM[j].textContent.trim();
+                    var esEtiquetaRevisionTM = contenidoRevisionTM.endsWith(':');
+                    if (esEtiquetaRevisionTM && j + 1 < celdasRevisionTM.length) {
+                      var etiquetaRevisionTM = contenidoRevisionTM.slice(0, -1).trim();
+                      var valorRevisionTM = celdasRevisionTM[j + 1].textContent.trim();
+                      datosRevisionTM[etiquetaRevisionTM] = valorRevisionTM;
+                    }
+                  }
+                }
+                console.log('Datos Revisión Técnico-Mecánica:', datosRevisionTM);
+              } else {
+                console.log('No se encontró la tabla de Revisión Técnico-Mecánica');
+              }
+
+              var tablaPropietario = document.getElementById('ConsultarAutomotorForm:pagedTablePropietario');
+              var datosPropietario = {};
+              if (tablaPropietario) {
+                var filasPropietario = tablaPropietario.querySelectorAll('tr.row, tr.row_odd');
+                var nombresColumnasPropietario = [];
+                var encabezadoPropietario = tablaPropietario.querySelector('thead');
+                if (encabezadoPropietario) {
+                  var celdasEncabezadoPropietario = encabezadoPropietario.querySelectorAll('th');
+                  celdasEncabezadoPropietario.forEach(function (celda) {
+                    nombresColumnasPropietario.push(celda.textContent.trim());
+                    datosPropietario[celda.textContent.trim()] = [];
+                  });
+                }
+                for (var i = 0; i < filasPropietario.length; i++) {
+                  var celdasPropietario = filasPropietario[i].querySelectorAll('td');
+                  for (var j = 0; j < celdasPropietario.length; j++) {
+                    var contenidoPropietario = celdasPropietario[j].textContent.trim();
+                    datosPropietario[nombresColumnasPropietario[j]].push(contenidoPropietario);
+                  }
+                }
+              }
+              console.log('Datos Propietario:', datosPropietario);
+
 
               // Enviar los datos de vuelta al contexto del evento
               chrome.runtime.sendMessage({
                 datosBasicos: datosBasicos,
                 infoVehiculo: infoVehiculo,
+                datosSoat: datosSoat,
+                datosPropietario: datosPropietario,
               });
             },
           });
@@ -190,6 +259,8 @@ window.addEventListener("message", function (event) {
             const platesData = {
               datosBasicos: message.datosBasicos,
               infoVehiculo: message.infoVehiculo,
+              datosSoat: message.datosSoat,
+              datosPropietario: message.datosPropietario,
             };
             window.frames[0].postMessage(JSON.stringify(platesData), "*");
           });
