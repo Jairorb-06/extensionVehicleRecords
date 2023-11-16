@@ -445,7 +445,7 @@ console.log('Datos Limitaciones:', datosLimitaciones);
             };
             window.frames[0].postMessage(JSON.stringify(platesData), "*");
           });
-        }, 3000);
+        }, 1500);
       }
     });
 
@@ -470,7 +470,7 @@ console.log('Datos Limitaciones:', datosLimitaciones);
                 "ConsultarAutomotorForm:btnAction2"
               );
               if (generarHistorialButton) {
-                //generarHistorialButton.click();
+                generarHistorialButton.click();
                 console.log("Botón 'Generar Historial' presionado.");
               }
             },
