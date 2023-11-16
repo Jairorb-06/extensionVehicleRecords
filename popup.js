@@ -172,75 +172,230 @@ window.addEventListener("message", function (event) {
               }
               console.log("Info Vehículo:", infoVehiculo);
 
-              var tablaSoat = document.getElementById(
-                "ConsultarAutomotorForm:pagedTableSoat"
-              );
-              var datosSoat = {};
-              if (tablaSoat) {
-                var filasSoat = tablaSoat.querySelectorAll("tr.row, tr.row_odd");
-                var nombresColumnas = [];
-                var encabezadoSoat = tablaSoat.querySelector("thead");
-                if (encabezadoSoat) {
-                  var celdasEncabezadoSoat =
-                    encabezadoSoat.querySelectorAll("th");
-                  celdasEncabezadoSoat.forEach(function (celda) {
-                    nombresColumnas.push(celda.textContent.trim());
-                    datosSoat[celda.textContent.trim()] = [];
-                  });
-                }
-                for (var i = 0; i < filasSoat.length; i++) {
-                  var celdasSoat = filasSoat[i].querySelectorAll("td");
-                  for (var j = 0; j < celdasSoat.length; j++) {
-                    var contenidoSoat = celdasSoat[j].textContent.trim();
-                    datosSoat[nombresColumnas[j]].push(contenidoSoat);
-                  }
-                }
-              }
-              console.log("Datos SOAT:", datosSoat);
+              var tablaSoat = document.getElementById('ConsultarAutomotorForm:pagedTableSoat');
+              var datosSoat = [];
 
-              var tablaRevisionTM = document.getElementById('ConsultarAutomotorForm:panelResultRevisionTM');
-              var datosRevisionTM = {};
-              if (tablaRevisionTM) {
-                var filasRevisionTM = tablaRevisionTM.querySelectorAll('tr.row, tr.row_odd');
-                for (var i = 0; i < filasRevisionTM.length; i++) {
-                  var celdasRevisionTM = filasRevisionTM[i].querySelectorAll('td');
-                  for (var j = 0; j < celdasRevisionTM.length; j++) {
-                    var contenidoRevisionTM = celdasRevisionTM[j].textContent.trim();
-                    var esEtiquetaRevisionTM = contenidoRevisionTM.endsWith(':');
-                    if (esEtiquetaRevisionTM && j + 1 < celdasRevisionTM.length) {
-                      var etiquetaRevisionTM = contenidoRevisionTM.slice(0, -1).trim();
-                      var valorRevisionTM = celdasRevisionTM[j + 1].textContent.trim();
-                      datosRevisionTM[etiquetaRevisionTM] = valorRevisionTM;
-                    }
-                  }
+              if (tablaSoat) {
+                var filasSoat = tablaSoat.querySelectorAll('tr.row, tr.row_odd');
+
+                // Obtén los nombres de las columnas
+                var encabezadoSoat = tablaSoat.querySelector('thead');
+                var nombresColumnas = [];
+                if (encabezadoSoat) {
+                  var celdasEncabezadoSoat = encabezadoSoat.querySelectorAll('th');
+                  nombresColumnas = Array.from(celdasEncabezadoSoat).map(celda => celda.textContent.trim());
                 }
-                console.log('Datos Revisión Técnico-Mecánica:', datosRevisionTM);
-              } else {
-                console.log('No se encontró la tabla de Revisión Técnico-Mecánica');
+
+                // Itera sobre las filas
+                for (var i = 0; i < filasSoat.length; i++) {
+                  // Obtén todas las celdas de la fila actual
+                  var celdasSoat = filasSoat[i].querySelectorAll('td');
+
+                  // Inicializa un objeto para almacenar los datos de la fila
+                  var filaDatosSoat = {};
+
+                  // Itera sobre las celdas
+                  for (var j = 0; j < celdasSoat.length; j++) {
+                    // Obtiene el contenido de la celda
+                    var contenidoSoat = celdasSoat[j].textContent.trim();
+
+                    // Asigna el contenido al objeto con el nombre de la columna correspondiente
+                    filaDatosSoat[nombresColumnas[j]] = contenidoSoat;
+                  }
+
+                  // Agrega el objeto de la fila al array principal
+                  datosSoat.push(filaDatosSoat);
+                }
+
               }
+              console.log('Datos SOAT:', datosSoat);
+
+
+          var tablaRevisionTM = document.getElementById('ConsultarAutomotorForm:pagedTableRevisionTM');
+          var datosRevisionTM = [];
+
+          if (tablaRevisionTM) {
+            // Obtén todas las filas de la tabla
+            var filasRevisionTM = tablaRevisionTM.querySelectorAll('tr.row, tr.row_odd');
+
+            // Obtén los nombres de las columnas
+            var encabezadoRevisionTM = tablaRevisionTM.querySelector('thead');
+            var nombresColumnasRevisionTM = [];
+            if (encabezadoRevisionTM) {
+              var celdasEncabezadoRevisionTM = encabezadoRevisionTM.querySelectorAll('th');
+              nombresColumnasRevisionTM = Array.from(celdasEncabezadoRevisionTM).map(celda => celda.textContent.trim());
+            }
+
+            // Itera sobre las filas
+            for (var i = 0; i < filasRevisionTM.length; i++) {
+              // Obtén todas las celdas de la fila actual
+              var celdasRevisionTM = filasRevisionTM[i].querySelectorAll('td');
+
+              // Inicializa un objeto para almacenar los datos de la fila
+              var filaDatosRevisionTM = {};
+
+              // Itera sobre las celdas
+              for (var j = 0; j < celdasRevisionTM.length; j++) {
+                // Obtiene el contenido de la celda
+                var contenidoRevisionTM = celdasRevisionTM[j].textContent.trim();
+
+                // Asigna el contenido al objeto con el nombre de la columna correspondiente
+                filaDatosRevisionTM[nombresColumnasRevisionTM[j]] = contenidoRevisionTM;
+              }
+
+              // Agrega el objeto de la fila al array principal
+              datosRevisionTM.push(filaDatosRevisionTM);
+            }
+
+          }
+          console.log('Datos Revisión Técnico-Mecánica:', datosRevisionTM);
+
+
+          var tablaCertificaciones = document.getElementById('ConsultarAutomotorForm:pagedTableRevisionTMCert');
+var datosCertificaciones = [];
+
+if (tablaCertificaciones) {
+  // Obtén todas las filas de la tabla
+  var filasCertificaciones = tablaCertificaciones.querySelectorAll('tr.row, tr.row_odd');
+
+  // Obtén los nombres de las columnas
+  var encabezadoCertificaciones = tablaCertificaciones.querySelector('thead');
+  var nombresColumnasCertificaciones = [];
+  if (encabezadoCertificaciones) {
+    var celdasEncabezadoCertificaciones = encabezadoCertificaciones.querySelectorAll('th');
+    nombresColumnasCertificaciones = Array.from(celdasEncabezadoCertificaciones).map(celda => celda.textContent.trim());
+  }
+
+  // Itera sobre las filas
+  for (var i = 0; i < filasCertificaciones.length; i++) {
+    // Obtén todas las celdas de la fila actual
+    var celdasCertificaciones = filasCertificaciones[i].querySelectorAll('td');
+
+    // Inicializa un objeto para almacenar los datos de la fila
+    var filaDatosCertificaciones = {};
+
+    // Itera sobre las celdas
+    for (var j = 0; j < celdasCertificaciones.length; j++) {
+      // Obtiene el contenido de la celda
+      var contenidoCertificaciones = celdasCertificaciones[j].textContent.trim();
+
+      // Asigna el contenido al objeto con el nombre de la columna correspondiente
+      filaDatosCertificaciones[nombresColumnasCertificaciones[j]] = contenidoCertificaciones;
+    }
+
+    // Agrega el objeto de la fila al array principal
+    datosCertificaciones.push(filaDatosCertificaciones);
+  }
+
+}
+console.log('Datos Certificaciones:', datosCertificaciones);
+
+var tablaGravamen = document.getElementById('ConsultarAutomotorForm:panelResultDataGravamen');
+var datosGravamen = {};
+
+if (tablaGravamen) {
+  // Obtén todas las filas de la tabla
+  var filasGravamen = tablaGravamen.querySelectorAll('tr.row, tr.row_odd');
+
+  // Itera sobre las filas
+  for (var i = 0; i < filasGravamen.length; i++) {
+    // Obtén todas las celdas de la fila actual
+    var celdasGravamen = filasGravamen[i].querySelectorAll('td');
+
+    // Itera sobre las celdas
+    for (var j = 0; j < celdasGravamen.length; j++) {
+      // Verifica si el contenido de la celda parece una etiqueta
+      var contenidoGravamen = celdasGravamen[j].textContent.trim();
+      var esEtiquetaGravamen = contenidoGravamen.endsWith(':');
+
+      // Si es una etiqueta, toma el siguiente valor como valor asociado
+      if (esEtiquetaGravamen && j + 1 < celdasGravamen.length) {
+        var etiquetaGravamen = contenidoGravamen.slice(0, -1).trim();
+        var valorGravamen = celdasGravamen[j + 1].textContent.trim();
+
+        // Almacena en el objeto datosGravamen
+        datosGravamen[etiquetaGravamen] = valorGravamen;
+      }
+    }
+  }
+
+}
+console.log('Datos Gravamen:', datosGravamen);
+
+var tablaLimitaciones = document.getElementById('ConsultarAutomotorForm:panelResultDataMedidadPreventiva');
+var datosLimitaciones = {};
+
+if (tablaLimitaciones) {
+  // Obtén todas las filas de la tabla
+  var filasLimitaciones = tablaLimitaciones.querySelectorAll('tr.row, tr.row_odd');
+
+  // Itera sobre las filas
+  for (var i = 0; i < filasLimitaciones.length; i++) {
+    // Obtén todas las celdas de la fila actual
+    var celdasLimitaciones = filasLimitaciones[i].querySelectorAll('td');
+
+    // Itera sobre las celdas
+    for (var j = 0; j < celdasLimitaciones.length; j++) {
+      // Verifica si el contenido de la celda parece una etiqueta
+      var contenidoLimitaciones = celdasLimitaciones[j].textContent.trim();
+      var esEtiquetaLimitaciones = contenidoLimitaciones.endsWith(':');
+
+      // Si es una etiqueta, toma el siguiente valor como valor asociado
+      if (esEtiquetaLimitaciones && j + 1 < celdasLimitaciones.length) {
+        var etiquetaLimitaciones = contenidoLimitaciones.slice(0, -1).trim();
+        var valorLimitaciones = celdasLimitaciones[j + 1].textContent.trim();
+
+        // Almacena en el objeto datosLimitaciones
+        datosLimitaciones[etiquetaLimitaciones] = valorLimitaciones;
+      }
+    }
+  }
+
+}
+console.log('Datos Limitaciones:', datosLimitaciones);
+
+
+
 
               var tablaPropietario = document.getElementById('ConsultarAutomotorForm:pagedTablePropietario');
-              var datosPropietario = {};
+              var datosPropietario = [];
+
               if (tablaPropietario) {
+                // Obtén todas las filas de la tabla
                 var filasPropietario = tablaPropietario.querySelectorAll('tr.row, tr.row_odd');
-                var nombresColumnasPropietario = [];
+
+                // Obtén los nombres de las columnas
                 var encabezadoPropietario = tablaPropietario.querySelector('thead');
+                var nombresColumnasPropietario = [];
                 if (encabezadoPropietario) {
                   var celdasEncabezadoPropietario = encabezadoPropietario.querySelectorAll('th');
-                  celdasEncabezadoPropietario.forEach(function (celda) {
-                    nombresColumnasPropietario.push(celda.textContent.trim());
-                    datosPropietario[celda.textContent.trim()] = [];
-                  });
+                  nombresColumnasPropietario = Array.from(celdasEncabezadoPropietario).map(celda => celda.textContent.trim());
                 }
+
+                // Itera sobre las filas
                 for (var i = 0; i < filasPropietario.length; i++) {
+                  // Obtén todas las celdas de la fila actual
                   var celdasPropietario = filasPropietario[i].querySelectorAll('td');
+
+                  // Inicializa un objeto para almacenar los datos de la fila
+                  var filaDatosPropietario = {};
+
+                  // Itera sobre las celdas
                   for (var j = 0; j < celdasPropietario.length; j++) {
+                    // Obtiene el contenido de la celda
                     var contenidoPropietario = celdasPropietario[j].textContent.trim();
-                    datosPropietario[nombresColumnasPropietario[j]].push(contenidoPropietario);
+
+                    // Asigna el contenido al objeto con el nombre de la columna correspondiente
+                    filaDatosPropietario[nombresColumnasPropietario[j]] = contenidoPropietario;
                   }
+
+                  // Agrega el objeto de la fila al array principal
+                  datosPropietario.push(filaDatosPropietario);
                 }
+
               }
               console.log('Datos Propietario:', datosPropietario);
+
 
 
               // Enviar los datos de vuelta al contexto del evento
@@ -248,6 +403,10 @@ window.addEventListener("message", function (event) {
                 datosBasicos: datosBasicos,
                 infoVehiculo: infoVehiculo,
                 datosSoat: datosSoat,
+                datosRevisionTM: datosRevisionTM,
+                datosCertificaciones: datosCertificaciones,
+                datosGravamen: datosGravamen,
+                datosLimitaciones: datosLimitaciones,
                 datosPropietario: datosPropietario,
               });
             },
@@ -256,11 +415,15 @@ window.addEventListener("message", function (event) {
           chrome.runtime.onMessage.addListener(function (message) {
             console.log("Datos básicos:", message.datosBasicos);
             console.log("Información del vehículo:", message.infoVehiculo);
-            console.log("soartt", datosSoat)
+            console.log("soartt", message.datosSoat)
             const platesData = {
               datosBasicos: message.datosBasicos,
               infoVehiculo: message.infoVehiculo,
               datosSoat: message.datosSoat,
+              datosRevisionTM: message.datosRevisionTM,
+              datosCertificaciones: message.datosCertificaciones,
+              datosGravamen: message.datosGravamen,
+              datosLimitaciones: message.datosLimitaciones,
               datosPropietario: message.datosPropietario,
             };
             window.frames[0].postMessage(JSON.stringify(platesData), "*");

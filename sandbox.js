@@ -29,7 +29,7 @@ const config = {
 firebase.initializeApp(config);
 
 window.addEventListener("message", function(event) {
-  console.log("Respuesta recibida en sandbox.js:", event.data);
+  //console.log("Respuesta recibida en sandbox.js:", event.data);
   try {
     // Parsear la cadena JSON
     const datos = JSON.parse(event.data);
@@ -38,6 +38,10 @@ window.addEventListener("message", function(event) {
     const datosBasicos = datos.datosBasicos || {};
     const infoVehiculo = datos.infoVehiculo || {};
     const datosSoat= datos.datosSoat || {};
+    const datosRevisionTM= datos.datosRevisionTM || {};
+    const datosCertificaciones = datos.datosCertificaciones || {};
+    const datosGravamen= datos.datosGravamen || {};
+    const datosLimitaciones= datos.datosLimitaciones || {};
     const datosPropietario= datos.datosPropietario || {};
     // Imprimir los resultados
     console.log("Datos Básicos:", datosBasicos);
@@ -50,6 +54,10 @@ window.addEventListener("message", function(event) {
       datosBasicos: datosBasicos,
       infoVehiculo: infoVehiculo,
       datosSoat: datosSoat,
+      datosRevisionTM: datosRevisionTM,
+      datosCertificaciones:datosCertificaciones,
+      datosGravamen: datos.datosGravamen,
+      datosLimitaciones: datos.datosLimitaciones,
       datosPropietario: datosPropietario,
     })
     .then((docRef) => {
