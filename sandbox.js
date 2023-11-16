@@ -40,7 +40,7 @@ window.addEventListener("message", function(event) {
     const datosSoat= datos.datosSoat || {};
     const datosRevisionTM= datos.datosRevisionTM || {};
     const datosCertificaciones = datos.datosCertificaciones || {};
-    const datosGravamen= datos.datosGravamen || {};
+    const datosGravamenes= datos.datosGravamenes || {};
     const datosLimitaciones= datos.datosLimitaciones || {};
     const datosPropietario= datos.datosPropietario || {};
     // Imprimir los resultados
@@ -56,8 +56,8 @@ window.addEventListener("message", function(event) {
       datosSoat: datosSoat,
       datosRevisionTM: datosRevisionTM,
       datosCertificaciones:datosCertificaciones,
-      datosGravamen: datos.datosGravamen,
-      datosLimitaciones: datos.datosLimitaciones,
+      datosGravamenes:datosGravamenes,
+      datosLimitaciones: datosLimitaciones,
       datosPropietario: datosPropietario,
     })
     .then((docRef) => {

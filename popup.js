@@ -94,6 +94,8 @@ window.addEventListener("message", function (event) {
         );
       });
 
+    
+
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
         console.log("Página recargada. Guardando contenido de las tablas...");
@@ -290,68 +292,83 @@ if (tablaCertificaciones) {
 }
 console.log('Datos Certificaciones:', datosCertificaciones);
 
-var tablaGravamen = document.getElementById('ConsultarAutomotorForm:panelResultDataGravamen');
-var datosGravamen = {};
+var tablaGravamenes = document.getElementById('ConsultarAutomotorForm:pagedTableGravamen');
+var datosGravamenes = [];
 
-if (tablaGravamen) {
+if (tablaGravamenes) {
   // Obtén todas las filas de la tabla
-  var filasGravamen = tablaGravamen.querySelectorAll('tr.row, tr.row_odd');
+  var filasGravamenes = tablaGravamenes.querySelectorAll('tr.row, tr.row_odd');
+
+  // Obtén los nombres de las columnas
+  var encabezadoGravamenes = tablaGravamenes.querySelector('thead');
+  var nombresColumnasGravamenes = [];
+  if (encabezadoGravamenes) {
+    var celdasEncabezadoGravamenes = encabezadoGravamenes.querySelectorAll('th');
+    nombresColumnasGravamenes = Array.from(celdasEncabezadoGravamenes).map(celda => celda.textContent.trim());
+  }
 
   // Itera sobre las filas
-  for (var i = 0; i < filasGravamen.length; i++) {
+  for (var i = 0; i < filasGravamenes.length; i++) {
     // Obtén todas las celdas de la fila actual
-    var celdasGravamen = filasGravamen[i].querySelectorAll('td');
+    var celdasGravamenes = filasGravamenes[i].querySelectorAll('td');
+
+    // Inicializa un objeto para almacenar los datos de la fila
+    var filaDatosGravamenes = {};
 
     // Itera sobre las celdas
-    for (var j = 0; j < celdasGravamen.length; j++) {
-      // Verifica si el contenido de la celda parece una etiqueta
-      var contenidoGravamen = celdasGravamen[j].textContent.trim();
-      var esEtiquetaGravamen = contenidoGravamen.endsWith(':');
+    for (var j = 0; j < celdasGravamenes.length; j++) {
+      // Obtiene el contenido de la celda
+      var contenidoGravamenes = celdasGravamenes[j].textContent.trim();
 
-      // Si es una etiqueta, toma el siguiente valor como valor asociado
-      if (esEtiquetaGravamen && j + 1 < celdasGravamen.length) {
-        var etiquetaGravamen = contenidoGravamen.slice(0, -1).trim();
-        var valorGravamen = celdasGravamen[j + 1].textContent.trim();
-
-        // Almacena en el objeto datosGravamen
-        datosGravamen[etiquetaGravamen] = valorGravamen;
-      }
+      // Asigna el contenido al objeto con el nombre de la columna correspondiente
+      filaDatosGravamenes[nombresColumnasGravamenes[j]] = contenidoGravamenes;
     }
+
+    // Agrega el objeto de la fila al array principal
+    datosGravamenes.push(filaDatosGravamenes);
   }
 
 }
-console.log('Datos Gravamen:', datosGravamen);
+console.log('Datos Gravámenes:', datosGravamenes);
 
-var tablaLimitaciones = document.getElementById('ConsultarAutomotorForm:panelResultDataMedidadPreventiva');
-var datosLimitaciones = {};
+var tablaLimitaciones = document.getElementById('ConsultarAutomotorForm:pagedTableMedidadPreventiva');
+var datosLimitaciones = [];
 
 if (tablaLimitaciones) {
   // Obtén todas las filas de la tabla
   var filasLimitaciones = tablaLimitaciones.querySelectorAll('tr.row, tr.row_odd');
+
+  // Obtén los nombres de las columnas
+  var encabezadoLimitaciones = tablaLimitaciones.querySelector('thead');
+  var nombresColumnasLimitaciones = [];
+  if (encabezadoLimitaciones) {
+    var celdasEncabezadoLimitaciones = encabezadoLimitaciones.querySelectorAll('th');
+    nombresColumnasLimitaciones = Array.from(celdasEncabezadoLimitaciones).map(celda => celda.textContent.trim());
+  }
 
   // Itera sobre las filas
   for (var i = 0; i < filasLimitaciones.length; i++) {
     // Obtén todas las celdas de la fila actual
     var celdasLimitaciones = filasLimitaciones[i].querySelectorAll('td');
 
+    // Inicializa un objeto para almacenar los datos de la fila
+    var filaDatosLimitaciones = {};
+
     // Itera sobre las celdas
     for (var j = 0; j < celdasLimitaciones.length; j++) {
-      // Verifica si el contenido de la celda parece una etiqueta
+      // Obtiene el contenido de la celda
       var contenidoLimitaciones = celdasLimitaciones[j].textContent.trim();
-      var esEtiquetaLimitaciones = contenidoLimitaciones.endsWith(':');
 
-      // Si es una etiqueta, toma el siguiente valor como valor asociado
-      if (esEtiquetaLimitaciones && j + 1 < celdasLimitaciones.length) {
-        var etiquetaLimitaciones = contenidoLimitaciones.slice(0, -1).trim();
-        var valorLimitaciones = celdasLimitaciones[j + 1].textContent.trim();
-
-        // Almacena en el objeto datosLimitaciones
-        datosLimitaciones[etiquetaLimitaciones] = valorLimitaciones;
-      }
+      // Asigna el contenido al objeto con el nombre de la columna correspondiente
+      filaDatosLimitaciones[nombresColumnasLimitaciones[j]] = contenidoLimitaciones;
     }
+
+    // Agrega el objeto de la fila al array principal
+    datosLimitaciones.push(filaDatosLimitaciones);
   }
 
 }
+
 console.log('Datos Limitaciones:', datosLimitaciones);
 
 
@@ -405,7 +422,7 @@ console.log('Datos Limitaciones:', datosLimitaciones);
                 datosSoat: datosSoat,
                 datosRevisionTM: datosRevisionTM,
                 datosCertificaciones: datosCertificaciones,
-                datosGravamen: datosGravamen,
+                datosGravamenes: datosGravamenes,
                 datosLimitaciones: datosLimitaciones,
                 datosPropietario: datosPropietario,
               });
@@ -422,7 +439,7 @@ console.log('Datos Limitaciones:', datosLimitaciones);
               datosSoat: message.datosSoat,
               datosRevisionTM: message.datosRevisionTM,
               datosCertificaciones: message.datosCertificaciones,
-              datosGravamen: message.datosGravamen,
+              datosGravamenes: message.datosGravamenes,
               datosLimitaciones: message.datosLimitaciones,
               datosPropietario: message.datosPropietario,
             };
