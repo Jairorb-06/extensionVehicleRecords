@@ -43,34 +43,55 @@ window.addEventListener("message", function(event) {
     const datosGravamenes= datos.datosGravamenes || {};
     const datosLimitaciones= datos.datosLimitaciones || {};
     const datosPropietario= datos.datosPropietario || {};
-    // Imprimir los resultados
-    console.log("Datos Básicos:", datosBasicos);
-    console.log("Info Vehículo:", infoVehiculo);
+    
+    const historialTramites= datos.historialTramites || {};
 
     // Enviar a Firestore
-    const firestore = firebase.firestore();
-    const respuestasCollection = firestore.collection("respuestas");
-    respuestasCollection.add({
-      datosBasicos: datosBasicos,
-      infoVehiculo: infoVehiculo,
-      datosSoat: datosSoat,
-      datosRevisionTM: datosRevisionTM,
-      datosCertificaciones:datosCertificaciones,
-      datosGravamenes:datosGravamenes,
-      datosLimitaciones: datosLimitaciones,
-      datosPropietario: datosPropietario,
-    })
-    .then((docRef) => {
-      console.log("Respuesta guardada en Firestore con ID:", docRef.id);
-    })
-    .catch((error) => {
-      console.error("Error al guardar la respuesta en Firestore:", error);
-    });
+    if (!esObjetoVacio(datosBasicos) && !esObjetoVacio(infoVehiculo)) {
+      const firestore = firebase.firestore();
+      if (!esObjetoVacio(datosBasicos)) {
+        const respuestasCollection = firestore.collection("informacion");
+        respuestasCollection.add({
+          datosBasicos: datosBasicos,
+          infoVehiculo: infoVehiculo,
+          datosSoat: datosSoat,
+          datosRevisionTM: datosRevisionTM,
+          datosCertificaciones:datosCertificaciones,
+          datosGravamenes:datosGravamenes,
+          datosLimitaciones: datosLimitaciones,
+          datosPropietario: datosPropietario,
+        })
+        .then((docRef) => {
+          console.log("Respuesta guardada en Firestore con ID:", docRef.id);
+        })
+        .catch((error) => {
+          console.error("Error al guardar la respuesta en Firestore:", error);
+        });
+      }
+      if (!esObjetoVacio(historialTramites)) {
+        const historialCollection = firestore.collection("historial");
+        historialCollection.add({
+          historialTramites: historialTramites,
+        })
+        .then((docRef) => {
+          console.log("Respuesta guardada en Firestore con ID:", docRef.id);
+        })
+        .catch((error) => {
+          console.error("Error al guardar la respuesta en Firestore:", error);
+        });
+      }
+    }
+    else {
+      console.log("Los objetos están vacíos");
+    }
   } catch (error) {
     console.error("Error al analizar el mensaje JSON:", error);
-  }
+  }  
 });
 
+function esObjetoVacio(obj) {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
 
 async function fetchData() {
   const app = firebase.initializeApp(config);
