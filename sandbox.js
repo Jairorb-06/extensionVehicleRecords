@@ -29,7 +29,7 @@ const config = {
 firebase.initializeApp(config);
 
 window.addEventListener("message", function(event) {
-  //console.log("Respuesta recibida en sandbox.js:", event.data);
+  console.log("Respuesta recibida en sandbox.js:", event.data);
   try {
     // Parsear la cadena JSON
     const datos = JSON.parse(event.data);
@@ -37,6 +37,7 @@ window.addEventListener("message", function(event) {
     // Acceder a cada objeto por separado
     const datosBasicos = datos.datosBasicos || {};
     const infoVehiculo = datos.infoVehiculo || {};
+    const  datosSoat = datos.datosSoat || {};
 
     // Imprimir los resultados
     console.log("Datos Básicos:", datosBasicos);
@@ -48,6 +49,7 @@ window.addEventListener("message", function(event) {
     respuestasCollection.add({
       datosBasicos: datosBasicos,
       infoVehiculo: infoVehiculo,
+      datosSoat: datosSoat,
     })
     .then((docRef) => {
       console.log("Respuesta guardada en Firestore con ID:", docRef.id);

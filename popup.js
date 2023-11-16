@@ -200,9 +200,9 @@ window.addEventListener("message", function (event) {
                   }
                 }
 
-              }  
-            console.log('Datos Básicos:', datosBasicos);
-            
+              }
+              console.log('Datos Básicos:', datosBasicos);
+
 
               var tablaInfoVehiculo = document.getElementById('ConsultarAutomotorForm:pGridContentInputColumns2');
               var infoVehiculo = {};
@@ -210,48 +210,92 @@ window.addEventListener("message", function (event) {
               if (tablaInfoVehiculo) {
                 // Obtén todas las filas de la tabla
                 var filasInfoVehiculo = tablaInfoVehiculo.querySelectorAll('tr.row, tr.row_odd');
-              
+
                 // Itera sobre las filas
                 for (var i = 0; i < filasInfoVehiculo.length; i++) {
                   // Obtén todas las celdas de la fila actual
                   var celdasInfoVehiculo = filasInfoVehiculo[i].querySelectorAll('td');
-              
+
                   // Itera sobre las celdas
                   for (var j = 0; j < celdasInfoVehiculo.length; j++) {
                     // Verifica si el contenido de la celda parece una etiqueta
                     var contenidoInfoVehiculo = celdasInfoVehiculo[j].textContent.trim();
                     var esEtiquetaInfoVehiculo = contenidoInfoVehiculo.endsWith(':');
-              
+
                     // Si es una etiqueta, toma el siguiente valor como valor asociado
                     if (esEtiquetaInfoVehiculo && j + 1 < celdasInfoVehiculo.length) {
                       var etiquetaInfoVehiculo = contenidoInfoVehiculo.slice(0, -1).trim();
                       var valorInfoVehiculo = celdasInfoVehiculo[j + 1].textContent.trim();
-              
+
                       // Almacena en el objeto infoVehiculo
                       infoVehiculo[etiquetaInfoVehiculo] = valorInfoVehiculo;
                     }
                   }
                 }
-              
+
                 console.log('Info Vehículo:', infoVehiculo);
               }
 
+              var tablaSoat = document.getElementById('ConsultarAutomotorForm:pagedTableSoat');
+              var datosSoat = [];
+
+              if (tablaSoat) {
+                // Obtén todas las filas de la tabla
+                var filasSoat = tablaSoat.querySelectorAll('tr.row, tr.row_odd');
+
+                // Obtén los nombres de las columnas
+                var nombresColumnas = [];
+                var encabezadoSoat = tablaSoat.querySelector('thead');
+                if (encabezadoSoat) {
+                  var celdasEncabezadoSoat = encabezadoSoat.querySelectorAll('th');
+                  celdasEncabezadoSoat.forEach(function (celda) {
+                    nombresColumnas.push(celda.textContent.trim());
+                  });
+                }
+
+                // Itera sobre las filas
+                for (var i = 0; i < filasSoat.length; i++) {
+                  // Obtén todas las celdas de la fila actual
+                  var celdasSoat = filasSoat[i].querySelectorAll('td');
+
+                  // Inicializa un objeto para almacenar los datos de esta fila
+                  var filaSoat = {};
+
+                  // Itera sobre las celdas
+                  for (var j = 0; j < celdasSoat.length; j++) {
+                    // Obtiene el contenido de la celda
+                    var contenidoSoat = celdasSoat[j].textContent.trim();
+
+                    // Usa el nombre de la columna como clave
+                    filaSoat[nombresColumnas[j]] = contenidoSoat;
+                  }
+
+                  // Almacena la fila en el array de datosSoat
+                  datosSoat.push(filaSoat);
+                }
+
+              }
+              console.log('Datos SOAT:', datosSoat);
+
+
               // Enviar los datos de vuelta al contexto del evento
-              chrome.runtime.sendMessage({ datosBasicos: datosBasicos, infoVehiculo: infoVehiculo });
+              chrome.runtime.sendMessage({ datosBasicos: datosBasicos, infoVehiculo: infoVehiculo, datosSoat: datosSoat });
             }
           });
 
           chrome.runtime.onMessage.addListener(function (message) {
             console.log("Datos básicos:", message.datosBasicos);
             console.log("Información del vehículo:", message.infoVehiculo);
+            console.log("soartt", datosSoat)
             const platesData = {
               datosBasicos: message.datosBasicos,
-              infoVehiculo: message.infoVehiculo
+              infoVehiculo: message.infoVehiculo,
+              datosSoat: datosSoat,
             };
             window.frames[0].postMessage(JSON.stringify(platesData), "*");
           });
 
-        }, 3000);
+        }, 5000);
       }
     });
 
