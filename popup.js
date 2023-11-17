@@ -1,6 +1,6 @@
 window.addEventListener("message", function (event) {
   if (event.data.platesData) {
-    const platesData = event.data.platesData;
+    const platesData = event.data.platesData;    
     document
       .getElementById("startAutomation")
       .addEventListener("click", function () {
@@ -20,7 +20,7 @@ window.addEventListener("message", function (event) {
                 );
                 if (input) {
                   console.log("Campo de entrada encontrado.");
-                  // console.log("placas en popup.js", platesData);
+                   console.log("placas en popup.js", platesData[2]);
                   let currentIndex = 0;
 
                   function insertPlacaAndTab() {
@@ -28,15 +28,11 @@ window.addEventListener("message", function (event) {
                       console.log("Insertando placa: " + placas[currentIndex]);
                       input.value = placas[currentIndex];
                       currentIndex++;
-
-                      // Simula el evento "input" en el campo de entrada
                       const inputEvent = new Event("input", {
                         bubbles: true,
                         cancelable: true,
                       });
                       input.dispatchEvent(inputEvent);
-
-                      // Presiona la tecla "Tab" automáticamente
                       input.focus();
                       const tabKeyCode = 9; // Código de tecla para "Tab"
                       const tabEvent = new KeyboardEvent("keydown", {
@@ -48,7 +44,6 @@ window.addEventListener("message", function (event) {
                       });
                       input.dispatchEvent(tabEvent);
 
-                      // Espera 2 segundos para que se complete la entrada y luego presiona el botón "Buscar"
                       setTimeout(() => {
                         const buscarButton = document.getElementById(
                           "ConsultarAutomotorForm:btnconsultarAutomotor"
@@ -65,31 +60,9 @@ window.addEventListener("message", function (event) {
                 } else {
                   console.log("Campo de entrada no encontrado.");
                 }
-
-                // Resto del código de automatización...
-                // ...
               },
               args: [platesData], // Pasa platesData como argumento
             });
-
-            /* const placs = [
-          "RZV652",
-          "WIB13D",
-          "185NCL",
-          "IHA03F",
-          "WIE09D",
-          "WIE25D",
-          "BSU727",
-          "NEB725",
-          "WIE11D",
-          "SKG115"
-        ];
-       
-        setTimeout(function () {
-          window.frames[0].postMessage({ placs: placs }, "*");
-          console.log("placas", placs);
-        }, 200);
-        let currentIndex = 0; */
           }
         );
       });
@@ -119,7 +92,7 @@ window.addEventListener("message", function (event) {
                     }
                   }
                 }
-                console.log("Datos Básicos:", datosBasicos);
+                // console.log("Datos Básicos:", datosBasicos);
 
                 var tablaInfoVehiculo = document.getElementById("ConsultarAutomotorForm:pGridContentInputColumns2");
                 var infoVehiculo = {};
@@ -127,17 +100,14 @@ window.addEventListener("message", function (event) {
                 if (tablaInfoVehiculo) {
                   var filasInfoVehiculo =
                     tablaInfoVehiculo.querySelectorAll("tr.row, tr.row_odd");
-
                   for (var i = 0; i < filasInfoVehiculo.length; i++) {
                     var celdasInfoVehiculo =
                       filasInfoVehiculo[i].querySelectorAll("td");
-
                     for (var j = 0; j < celdasInfoVehiculo.length; j++) {
                       var contenidoInfoVehiculo =
                         celdasInfoVehiculo[j].textContent.trim();
                       var esEtiquetaInfoVehiculo =
                         contenidoInfoVehiculo.endsWith(":");
-
                       if (
                         esEtiquetaInfoVehiculo &&
                         j + 1 < celdasInfoVehiculo.length
@@ -147,17 +117,15 @@ window.addEventListener("message", function (event) {
                           .trim();
                         var valorInfoVehiculo =
                           celdasInfoVehiculo[j + 1].textContent.trim();
-
                         infoVehiculo[etiquetaInfoVehiculo] = valorInfoVehiculo;
                       }
                     }
                   }
                 }
-                console.log("Info Vehículo:", infoVehiculo);
+                // console.log("Info Vehículo:", infoVehiculo);
 
                 var tablaSoat = document.getElementById('ConsultarAutomotorForm:pagedTableSoat');
                 var datosSoat = [];
-
                 if (tablaSoat) {
                   var filasSoat = tablaSoat.querySelectorAll('tr.row, tr.row_odd');
 
@@ -175,19 +143,17 @@ window.addEventListener("message", function (event) {
 
                     for (var j = 0; j < celdasSoat.length; j++) {
                       var contenidoSoat = celdasSoat[j].textContent.trim();
-
                       filaDatosSoat[nombresColumnas[j]] = contenidoSoat;
                     }
 
                     datosSoat.push(filaDatosSoat);
                   }
                 }
-                console.log('Datos SOAT:', datosSoat);
+                // console.log('Datos SOAT:', datosSoat);
 
 
                 var tablaRevisionTM = document.getElementById('ConsultarAutomotorForm:pagedTableRevisionTM');
                 var datosRevisionTM = [];
-
                 if (tablaRevisionTM) {
                   var filasRevisionTM = tablaRevisionTM.querySelectorAll('tr.row, tr.row_odd');
 
@@ -199,27 +165,22 @@ window.addEventListener("message", function (event) {
                   }
 
                   for (var i = 0; i < filasRevisionTM.length; i++) {
-
                     var celdasRevisionTM = filasRevisionTM[i].querySelectorAll('td');
-
                     var filaDatosRevisionTM = {};
-
                     for (var j = 0; j < celdasRevisionTM.length; j++) {
-
                       var contenidoRevisionTM = celdasRevisionTM[j].textContent.trim();
                       filaDatosRevisionTM[nombresColumnasRevisionTM[j]] = contenidoRevisionTM;
                     }
                     datosRevisionTM.push(filaDatosRevisionTM);
                   }
                 }
-                console.log('Datos Revisión Técnico-Mecánica:', datosRevisionTM);
+                // console.log('Datos Revisión Técnico-Mecánica:', datosRevisionTM);
 
                 var tablaCertificaciones = document.getElementById('ConsultarAutomotorForm:pagedTableRevisionTMCert');
                 var datosCertificaciones = [];
 
                 if (tablaCertificaciones) {
                   var filasCertificaciones = tablaCertificaciones.querySelectorAll('tr.row, tr.row_odd');
-
                   var encabezadoCertificaciones = tablaCertificaciones.querySelector('thead');
                   var nombresColumnasCertificaciones = [];
                   if (encabezadoCertificaciones) {
@@ -238,7 +199,7 @@ window.addEventListener("message", function (event) {
                   }
 
                 }
-                console.log('Datos Certificaciones:', datosCertificaciones);
+                // console.log('Datos Certificaciones:', datosCertificaciones);
 
                 var tablaGravamenes = document.getElementById('ConsultarAutomotorForm:pagedTableGravamen');
                 var datosGravamenes = [];
@@ -262,7 +223,7 @@ window.addEventListener("message", function (event) {
                   }
 
                 }
-                console.log('Datos Gravámenes:', datosGravamenes);
+                // console.log('Datos Gravámenes:', datosGravamenes);
 
                 var tablaLimitaciones = document.getElementById('ConsultarAutomotorForm:pagedTableMedidadPreventiva');
                 var datosLimitaciones = [];
@@ -286,7 +247,7 @@ window.addEventListener("message", function (event) {
                   }
 
                 }
-                console.log('Datos Limitaciones:', datosLimitaciones);
+                // console.log('Datos Limitaciones:', datosLimitaciones);
 
                 var tablaPropietario = document.getElementById('ConsultarAutomotorForm:pagedTablePropietario');
                 var datosPropietario = [];
@@ -309,7 +270,7 @@ window.addEventListener("message", function (event) {
                     datosPropietario.push(filaDatosPropietario);
                   }
                 }
-                console.log('Datos Propietario:', datosPropietario);
+                // console.log('Datos Propietario:', datosPropietario);
 
                 //historial vehículos
                 var tablaTramites = document.getElementById('historialVehiculos:tablaTramitesAutomotor');
@@ -332,7 +293,7 @@ window.addEventListener("message", function (event) {
                       historialTramites.push(filaDatosTramites);
                     }
                   }
-                  console.log('Datos Trámites:', historialTramites);
+                  // console.log('Datos Trámites:', historialTramites);
                   if (Object.keys(datosBasicos).length > 0 &&
                   Object.keys(infoVehiculo).length > 0 
                   ) {
@@ -362,9 +323,9 @@ window.addEventListener("message", function (event) {
           });
 
           chrome.runtime.onMessage.addListener(function (message) {
-            console.log("Datos básicos:", message.datosBasicos);
-            console.log("Información del vehículo:", message.infoVehiculo);
-            console.log("soartt", message.datosSoat)
+            // console.log("Datos básicos:", message.datosBasicos);
+            // console.log("Información del vehículo:", message.infoVehiculo);
+            // console.log("soartt", message.datosSoat)
             const platesData = {
               datosBasicos: message.datosBasicos,
               infoVehiculo: message.infoVehiculo,
@@ -384,21 +345,11 @@ window.addEventListener("message", function (event) {
 
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
-        console.log(
-          "Página recargada. Esperando antes de buscar el botón 'Generar Historial'..."
-        );
+        console.log("Página recargada. Esperando antes de buscar el botón 'Generar Historial'...");
         //setTimeout(function () {
-          // console.log("Espera completada. Guardando contenido de la consulta en localStorage...");
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
             function: () => {
-              /*const fechaLicenciaContent = document.getElementById('ConsultarAutomotorForm:fechaLicencia2').textContent;
-              if (fechaLicenciaContent) {           
-                localStorage.setItem('fechaLicenciaContent', fechaLicenciaContent);
-                console.log("Contenido de la fecha de licencia guardado en localStorage.");
-              } else {
-                console.log("No se encontró la etiqueta con id 'ConsultarAutomotorForm:fechaLicencia2'.");
-              }*/
               const generarHistorialButton = document.getElementById(
                 "ConsultarAutomotorForm:btnAction2"
               );
@@ -412,54 +363,6 @@ window.addEventListener("message", function (event) {
       }
     });
 
-    
-    /*chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-      if (changeInfo.status === "complete") {
-        console.log("Página recargada. Guardando historial de vehículos");
-        setTimeout(function () {
-          chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            function: function () {
-
-              var tablaTramites = document.getElementById('historialVehiculos:tablaTramitesAutomotor');
-              var historialTramites = [];
-                if (tablaTramites) {
-                  var filasTramites = tablaTramites.querySelectorAll('tr.row, tr.row_odd');
-                  var encabezadoTramites = tablaTramites.querySelector('thead');
-                  var nombresColumnasTramites = [];
-                  if (encabezadoTramites) {
-                    var celdasEncabezadoTramites = encabezadoTramites.querySelectorAll('th');
-                    nombresColumnasTramites = Array.from(celdasEncabezadoTramites).map(celda => celda.textContent.trim());
-                  }
-                  for (var i = 0; i < filasTramites.length; i++) {
-                    var celdasTramites = filasTramites[i].querySelectorAll('td');
-                    var filaDatosTramites = {};
-                    for (var j = 0; j < celdasTramites.length; j++) {
-                      var contenidoTramites = celdasTramites[j].textContent.trim();
-                      filaDatosTramites[nombresColumnasTramites[j]] = contenidoTramites;
-                    }
-                    historialTramites.push(filaDatosTramites);
-                  }
-                }
-                console.log('Datos Trámites:', historialTramites);
-              
-                chrome.runtime.sendMessage({
-                  historialTramites: historialTramites,
-                });
-              
-            },
-          });
-
-          chrome.runtime.onMessage.addListener(function (message) {
-            const platesData = {
-              historialTramites:message.historialTramites,
-            };
-            window.frames[0].postMessage(JSON.stringify(platesData), "*");
-          });
-        }, 1000);
-      }
-    });*/
-    
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
         console.log("Página recargada después de presionar 'Consultar Automotor'. Esperando antes de buscar el botón 'Consultar Automotor'...");

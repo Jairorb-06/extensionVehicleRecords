@@ -46,8 +46,8 @@ window.addEventListener("message", function(event) {
     
     const historialTramites= datos.historialTramites || [];;
 
-    console.log("length", Object.keys(datosBasicos).length )
-    console.log("length history",  historialTramites.length > 0)
+    // console.log("length", Object.keys(datosBasicos).length )
+    // console.log("length history",  historialTramites.length > 0)
     const firestore = firebase.firestore();
    /* if (
       (Object.keys(datosBasicos).length === 0 &&
@@ -102,7 +102,7 @@ window.addEventListener("message", function(event) {
 
 async function fetchData() {
   const app = firebase.initializeApp(config);
-  console.log("Initialized Firebase!", app);
+  // console.log("Initialized Firebase!", app);
 
   // Inicializa Firebase Firestore
   const firestore = firebase.firestore();
@@ -125,7 +125,7 @@ async function fetchData() {
         // Después de obtener las placas
         window.parent.postMessage({ platesData }, "*");
 
-        console.log("Placas obtenidas en sandbox.js:", platesData);
+        // console.log("Placas obtenidas en sandbox.js:", platesData);
       } else {
         console.log("No se encontraron datos de placas.");
       }
