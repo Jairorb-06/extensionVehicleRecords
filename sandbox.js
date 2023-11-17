@@ -47,9 +47,9 @@ window.addEventListener("message", function(event) {
     const historialTramites= datos.historialTramites || {};
 
     // Enviar a Firestore
-    if (!esObjetoVacio(datosBasicos) && !esObjetoVacio(infoVehiculo)) {
+    
       const firestore = firebase.firestore();
-      if (!esObjetoVacio(datosBasicos)) {
+      
         const respuestasCollection = firestore.collection("informacion");
         respuestasCollection.add({
           datosBasicos: datosBasicos,
@@ -67,8 +67,8 @@ window.addEventListener("message", function(event) {
         .catch((error) => {
           console.error("Error al guardar la respuesta en Firestore:", error);
         });
-      }
-      if (!esObjetoVacio(historialTramites)) {
+     
+     
         const historialCollection = firestore.collection("historial");
         historialCollection.add({
           historialTramites: historialTramites,
@@ -79,19 +79,13 @@ window.addEventListener("message", function(event) {
         .catch((error) => {
           console.error("Error al guardar la respuesta en Firestore:", error);
         });
-      }
-    }
-    else {
-      console.log("Los objetos están vacíos");
-    }
+      
+    
   } catch (error) {
     console.error("Error al analizar el mensaje JSON:", error);
   }  
 });
 
-function esObjetoVacio(obj) {
-  return Object.keys(obj).length === 0 && obj.constructor === Object;
-}
 
 async function fetchData() {
   const app = firebase.initializeApp(config);
