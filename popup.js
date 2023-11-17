@@ -97,233 +97,267 @@ window.addEventListener("message", function (event) {
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
         console.log("Página recargada. Guardando contenido de las tablas...");
-        setTimeout(function () {
+        //setTimeout(function () {
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
             function: function () {
-              var tablaDatosBasicos = document.getElementById(
-                "ConsultarAutomotorForm:pGridContentInputColumns1"
-              );
+              var tablaDatosBasicos = document.getElementById("ConsultarAutomotorForm:pGridContentInputColumns1");
               var datosBasicos = {};
-              if (tablaDatosBasicos) {
-                var filas =
-                  tablaDatosBasicos.querySelectorAll("tr.row, tr.row_odd");
-                for (var i = 0; i < filas.length; i++) {
-                  var celdas = filas[i].querySelectorAll("td");
-                  for (var j = 0; j < celdas.length; j++) {
-                    var contenido = celdas[j].textContent.trim();
-                    var esEtiqueta = contenido.endsWith(":");
-                    if (esEtiqueta && j + 1 < celdas.length) {
-                      var etiqueta = contenido.slice(0, -1).trim();
-                      var valor = celdas[j + 1].textContent.trim();
-                      datosBasicos[etiqueta] = valor;
+                if (tablaDatosBasicos) {
+                  var filas =
+                    tablaDatosBasicos.querySelectorAll("tr.row, tr.row_odd");
+                  for (var i = 0; i < filas.length; i++) {
+                    var celdas = filas[i].querySelectorAll("td");
+                    for (var j = 0; j < celdas.length; j++) {
+                      var contenido = celdas[j].textContent.trim();
+                      var esEtiqueta = contenido.endsWith(":");
+                      if (esEtiqueta && j + 1 < celdas.length) {
+                        var etiqueta = contenido.slice(0, -1).trim();
+                        var valor = celdas[j + 1].textContent.trim();
+                        datosBasicos[etiqueta] = valor;
+                      }
                     }
                   }
                 }
-              }
-              console.log("Datos Básicos:", datosBasicos);
+                console.log("Datos Básicos:", datosBasicos);
 
-              var tablaInfoVehiculo = document.getElementById("ConsultarAutomotorForm:pGridContentInputColumns2");
-              var infoVehiculo = {};
+                var tablaInfoVehiculo = document.getElementById("ConsultarAutomotorForm:pGridContentInputColumns2");
+                var infoVehiculo = {};
 
-              if (tablaInfoVehiculo) {
-                var filasInfoVehiculo =
-                  tablaInfoVehiculo.querySelectorAll("tr.row, tr.row_odd");
+                if (tablaInfoVehiculo) {
+                  var filasInfoVehiculo =
+                    tablaInfoVehiculo.querySelectorAll("tr.row, tr.row_odd");
 
-                for (var i = 0; i < filasInfoVehiculo.length; i++) {
-                  var celdasInfoVehiculo =
-                    filasInfoVehiculo[i].querySelectorAll("td");
+                  for (var i = 0; i < filasInfoVehiculo.length; i++) {
+                    var celdasInfoVehiculo =
+                      filasInfoVehiculo[i].querySelectorAll("td");
 
-                  for (var j = 0; j < celdasInfoVehiculo.length; j++) {
-                    var contenidoInfoVehiculo =
-                      celdasInfoVehiculo[j].textContent.trim();
-                    var esEtiquetaInfoVehiculo =
-                      contenidoInfoVehiculo.endsWith(":");
+                    for (var j = 0; j < celdasInfoVehiculo.length; j++) {
+                      var contenidoInfoVehiculo =
+                        celdasInfoVehiculo[j].textContent.trim();
+                      var esEtiquetaInfoVehiculo =
+                        contenidoInfoVehiculo.endsWith(":");
 
-                    if (
-                      esEtiquetaInfoVehiculo &&
-                      j + 1 < celdasInfoVehiculo.length
-                    ) {
-                      var etiquetaInfoVehiculo = contenidoInfoVehiculo
-                        .slice(0, -1)
-                        .trim();
-                      var valorInfoVehiculo =
-                        celdasInfoVehiculo[j + 1].textContent.trim();
+                      if (
+                        esEtiquetaInfoVehiculo &&
+                        j + 1 < celdasInfoVehiculo.length
+                      ) {
+                        var etiquetaInfoVehiculo = contenidoInfoVehiculo
+                          .slice(0, -1)
+                          .trim();
+                        var valorInfoVehiculo =
+                          celdasInfoVehiculo[j + 1].textContent.trim();
 
-                      infoVehiculo[etiquetaInfoVehiculo] = valorInfoVehiculo;
+                        infoVehiculo[etiquetaInfoVehiculo] = valorInfoVehiculo;
+                      }
                     }
                   }
                 }
-              }
-              console.log("Info Vehículo:", infoVehiculo);
+                console.log("Info Vehículo:", infoVehiculo);
 
-              var tablaSoat = document.getElementById('ConsultarAutomotorForm:pagedTableSoat');
-              var datosSoat = [];
+                var tablaSoat = document.getElementById('ConsultarAutomotorForm:pagedTableSoat');
+                var datosSoat = [];
 
-              if (tablaSoat) {
-                var filasSoat = tablaSoat.querySelectorAll('tr.row, tr.row_odd');
+                if (tablaSoat) {
+                  var filasSoat = tablaSoat.querySelectorAll('tr.row, tr.row_odd');
 
-                var encabezadoSoat = tablaSoat.querySelector('thead');
-                var nombresColumnas = [];
-                if (encabezadoSoat) {
-                  var celdasEncabezadoSoat = encabezadoSoat.querySelectorAll('th');
-                  nombresColumnas = Array.from(celdasEncabezadoSoat).map(celda => celda.textContent.trim());
-                }
-
-                for (var i = 0; i < filasSoat.length; i++) {
-                  var celdasSoat = filasSoat[i].querySelectorAll('td');
-
-                  var filaDatosSoat = {};
-
-                  for (var j = 0; j < celdasSoat.length; j++) {
-                    var contenidoSoat = celdasSoat[j].textContent.trim();
-
-                    filaDatosSoat[nombresColumnas[j]] = contenidoSoat;
+                  var encabezadoSoat = tablaSoat.querySelector('thead');
+                  var nombresColumnas = [];
+                  if (encabezadoSoat) {
+                    var celdasEncabezadoSoat = encabezadoSoat.querySelectorAll('th');
+                    nombresColumnas = Array.from(celdasEncabezadoSoat).map(celda => celda.textContent.trim());
                   }
 
-                  datosSoat.push(filaDatosSoat);
-                }
-              }
-              console.log('Datos SOAT:', datosSoat);
+                  for (var i = 0; i < filasSoat.length; i++) {
+                    var celdasSoat = filasSoat[i].querySelectorAll('td');
 
+                    var filaDatosSoat = {};
 
-              var tablaRevisionTM = document.getElementById('ConsultarAutomotorForm:pagedTableRevisionTM');
-              var datosRevisionTM = [];
+                    for (var j = 0; j < celdasSoat.length; j++) {
+                      var contenidoSoat = celdasSoat[j].textContent.trim();
 
-              if (tablaRevisionTM) {
-                var filasRevisionTM = tablaRevisionTM.querySelectorAll('tr.row, tr.row_odd');
+                      filaDatosSoat[nombresColumnas[j]] = contenidoSoat;
+                    }
 
-                var encabezadoRevisionTM = tablaRevisionTM.querySelector('thead');
-                var nombresColumnasRevisionTM = [];
-                if (encabezadoRevisionTM) {
-                  var celdasEncabezadoRevisionTM = encabezadoRevisionTM.querySelectorAll('th');
-                  nombresColumnasRevisionTM = Array.from(celdasEncabezadoRevisionTM).map(celda => celda.textContent.trim());
-                }
-
-                for (var i = 0; i < filasRevisionTM.length; i++) {
-
-                  var celdasRevisionTM = filasRevisionTM[i].querySelectorAll('td');
-
-                  var filaDatosRevisionTM = {};
-
-                  for (var j = 0; j < celdasRevisionTM.length; j++) {
-
-                    var contenidoRevisionTM = celdasRevisionTM[j].textContent.trim();
-                    filaDatosRevisionTM[nombresColumnasRevisionTM[j]] = contenidoRevisionTM;
+                    datosSoat.push(filaDatosSoat);
                   }
-                  datosRevisionTM.push(filaDatosRevisionTM);
                 }
-              }
-              console.log('Datos Revisión Técnico-Mecánica:', datosRevisionTM);
+                console.log('Datos SOAT:', datosSoat);
 
-              var tablaCertificaciones = document.getElementById('ConsultarAutomotorForm:pagedTableRevisionTMCert');
-              var datosCertificaciones = [];
 
-              if (tablaCertificaciones) {
-                var filasCertificaciones = tablaCertificaciones.querySelectorAll('tr.row, tr.row_odd');
+                var tablaRevisionTM = document.getElementById('ConsultarAutomotorForm:pagedTableRevisionTM');
+                var datosRevisionTM = [];
 
-                var encabezadoCertificaciones = tablaCertificaciones.querySelector('thead');
-                var nombresColumnasCertificaciones = [];
-                if (encabezadoCertificaciones) {
-                  var celdasEncabezadoCertificaciones = encabezadoCertificaciones.querySelectorAll('th');
-                  nombresColumnasCertificaciones = Array.from(celdasEncabezadoCertificaciones).map(celda => celda.textContent.trim());
-                }
+                if (tablaRevisionTM) {
+                  var filasRevisionTM = tablaRevisionTM.querySelectorAll('tr.row, tr.row_odd');
 
-                for (var i = 0; i < filasCertificaciones.length; i++) {
-                  var celdasCertificaciones = filasCertificaciones[i].querySelectorAll('td');
-                  var filaDatosCertificaciones = {};
-                  for (var j = 0; j < celdasCertificaciones.length; j++) {
-                    var contenidoCertificaciones = celdasCertificaciones[j].textContent.trim();
-                    filaDatosCertificaciones[nombresColumnasCertificaciones[j]] = contenidoCertificaciones;
+                  var encabezadoRevisionTM = tablaRevisionTM.querySelector('thead');
+                  var nombresColumnasRevisionTM = [];
+                  if (encabezadoRevisionTM) {
+                    var celdasEncabezadoRevisionTM = encabezadoRevisionTM.querySelectorAll('th');
+                    nombresColumnasRevisionTM = Array.from(celdasEncabezadoRevisionTM).map(celda => celda.textContent.trim());
                   }
-                  datosCertificaciones.push(filaDatosCertificaciones);
-                }
 
-              }
-              console.log('Datos Certificaciones:', datosCertificaciones);
+                  for (var i = 0; i < filasRevisionTM.length; i++) {
 
-              var tablaGravamenes = document.getElementById('ConsultarAutomotorForm:pagedTableGravamen');
-              var datosGravamenes = [];
+                    var celdasRevisionTM = filasRevisionTM[i].querySelectorAll('td');
 
-              if (tablaGravamenes) {
-                var filasGravamenes = tablaGravamenes.querySelectorAll('tr.row, tr.row_odd');
-                var encabezadoGravamenes = tablaGravamenes.querySelector('thead');
-                var nombresColumnasGravamenes = [];
-                if (encabezadoGravamenes) {
-                  var celdasEncabezadoGravamenes = encabezadoGravamenes.querySelectorAll('th');
-                  nombresColumnasGravamenes = Array.from(celdasEncabezadoGravamenes).map(celda => celda.textContent.trim());
-                }
-                for (var i = 0; i < filasGravamenes.length; i++) {
-                  var celdasGravamenes = filasGravamenes[i].querySelectorAll('td');
-                  var filaDatosGravamenes = {};
-                  for (var j = 0; j < celdasGravamenes.length; j++) {
-                    var contenidoGravamenes = celdasGravamenes[j].textContent.trim();
-                    filaDatosGravamenes[nombresColumnasGravamenes[j]] = contenidoGravamenes;
+                    var filaDatosRevisionTM = {};
+
+                    for (var j = 0; j < celdasRevisionTM.length; j++) {
+
+                      var contenidoRevisionTM = celdasRevisionTM[j].textContent.trim();
+                      filaDatosRevisionTM[nombresColumnasRevisionTM[j]] = contenidoRevisionTM;
+                    }
+                    datosRevisionTM.push(filaDatosRevisionTM);
                   }
-                  datosGravamenes.push(filaDatosGravamenes);
                 }
+                console.log('Datos Revisión Técnico-Mecánica:', datosRevisionTM);
 
-              }
-              console.log('Datos Gravámenes:', datosGravamenes);
+                var tablaCertificaciones = document.getElementById('ConsultarAutomotorForm:pagedTableRevisionTMCert');
+                var datosCertificaciones = [];
 
-              var tablaLimitaciones = document.getElementById('ConsultarAutomotorForm:pagedTableMedidadPreventiva');
-              var datosLimitaciones = [];
+                if (tablaCertificaciones) {
+                  var filasCertificaciones = tablaCertificaciones.querySelectorAll('tr.row, tr.row_odd');
 
-              if (tablaLimitaciones) {
-                var filasLimitaciones = tablaLimitaciones.querySelectorAll('tr.row, tr.row_odd');
-                var encabezadoLimitaciones = tablaLimitaciones.querySelector('thead');
-                var nombresColumnasLimitaciones = [];
-                if (encabezadoLimitaciones) {
-                  var celdasEncabezadoLimitaciones = encabezadoLimitaciones.querySelectorAll('th');
-                  nombresColumnasLimitaciones = Array.from(celdasEncabezadoLimitaciones).map(celda => celda.textContent.trim());
-                }
-                for (var i = 0; i < filasLimitaciones.length; i++) {
-                  var celdasLimitaciones = filasLimitaciones[i].querySelectorAll('td');
-                  var filaDatosLimitaciones = {};
-                  for (var j = 0; j < celdasLimitaciones.length; j++) {
-                    var contenidoLimitaciones = celdasLimitaciones[j].textContent.trim();
-                    filaDatosLimitaciones[nombresColumnasLimitaciones[j]] = contenidoLimitaciones;
+                  var encabezadoCertificaciones = tablaCertificaciones.querySelector('thead');
+                  var nombresColumnasCertificaciones = [];
+                  if (encabezadoCertificaciones) {
+                    var celdasEncabezadoCertificaciones = encabezadoCertificaciones.querySelectorAll('th');
+                    nombresColumnasCertificaciones = Array.from(celdasEncabezadoCertificaciones).map(celda => celda.textContent.trim());
                   }
-                  datosLimitaciones.push(filaDatosLimitaciones);
-                }
 
-              }
-              console.log('Datos Limitaciones:', datosLimitaciones);
-
-              var tablaPropietario = document.getElementById('ConsultarAutomotorForm:pagedTablePropietario');
-              var datosPropietario = [];
-
-              if (tablaPropietario) {
-                var filasPropietario = tablaPropietario.querySelectorAll('tr.row, tr.row_odd');
-                var encabezadoPropietario = tablaPropietario.querySelector('thead');
-                var nombresColumnasPropietario = [];
-                if (encabezadoPropietario) {
-                  var celdasEncabezadoPropietario = encabezadoPropietario.querySelectorAll('th');
-                  nombresColumnasPropietario = Array.from(celdasEncabezadoPropietario).map(celda => celda.textContent.trim());
-                }
-                for (var i = 0; i < filasPropietario.length; i++) {
-                  var celdasPropietario = filasPropietario[i].querySelectorAll('td');
-                  var filaDatosPropietario = {};
-                  for (var j = 0; j < celdasPropietario.length; j++) {
-                    var contenidoPropietario = celdasPropietario[j].textContent.trim();
-                    filaDatosPropietario[nombresColumnasPropietario[j]] = contenidoPropietario;
+                  for (var i = 0; i < filasCertificaciones.length; i++) {
+                    var celdasCertificaciones = filasCertificaciones[i].querySelectorAll('td');
+                    var filaDatosCertificaciones = {};
+                    for (var j = 0; j < celdasCertificaciones.length; j++) {
+                      var contenidoCertificaciones = celdasCertificaciones[j].textContent.trim();
+                      filaDatosCertificaciones[nombresColumnasCertificaciones[j]] = contenidoCertificaciones;
+                    }
+                    datosCertificaciones.push(filaDatosCertificaciones);
                   }
-                  datosPropietario.push(filaDatosPropietario);
-                }
-              }
-              console.log('Datos Propietario:', datosPropietario);
 
-              // Enviar los datos de vuelta al contexto del evento
-              chrome.runtime.sendMessage({
-                datosBasicos: datosBasicos,
-                infoVehiculo: infoVehiculo,
-                datosSoat: datosSoat,
-                datosRevisionTM: datosRevisionTM,
-                datosCertificaciones: datosCertificaciones,
-                datosGravamenes: datosGravamenes,
-                datosLimitaciones: datosLimitaciones,
-                datosPropietario: datosPropietario,
-              });
+                }
+                console.log('Datos Certificaciones:', datosCertificaciones);
+
+                var tablaGravamenes = document.getElementById('ConsultarAutomotorForm:pagedTableGravamen');
+                var datosGravamenes = [];
+
+                if (tablaGravamenes) {
+                  var filasGravamenes = tablaGravamenes.querySelectorAll('tr.row, tr.row_odd');
+                  var encabezadoGravamenes = tablaGravamenes.querySelector('thead');
+                  var nombresColumnasGravamenes = [];
+                  if (encabezadoGravamenes) {
+                    var celdasEncabezadoGravamenes = encabezadoGravamenes.querySelectorAll('th');
+                    nombresColumnasGravamenes = Array.from(celdasEncabezadoGravamenes).map(celda => celda.textContent.trim());
+                  }
+                  for (var i = 0; i < filasGravamenes.length; i++) {
+                    var celdasGravamenes = filasGravamenes[i].querySelectorAll('td');
+                    var filaDatosGravamenes = {};
+                    for (var j = 0; j < celdasGravamenes.length; j++) {
+                      var contenidoGravamenes = celdasGravamenes[j].textContent.trim();
+                      filaDatosGravamenes[nombresColumnasGravamenes[j]] = contenidoGravamenes;
+                    }
+                    datosGravamenes.push(filaDatosGravamenes);
+                  }
+
+                }
+                console.log('Datos Gravámenes:', datosGravamenes);
+
+                var tablaLimitaciones = document.getElementById('ConsultarAutomotorForm:pagedTableMedidadPreventiva');
+                var datosLimitaciones = [];
+
+                if (tablaLimitaciones) {
+                  var filasLimitaciones = tablaLimitaciones.querySelectorAll('tr.row, tr.row_odd');
+                  var encabezadoLimitaciones = tablaLimitaciones.querySelector('thead');
+                  var nombresColumnasLimitaciones = [];
+                  if (encabezadoLimitaciones) {
+                    var celdasEncabezadoLimitaciones = encabezadoLimitaciones.querySelectorAll('th');
+                    nombresColumnasLimitaciones = Array.from(celdasEncabezadoLimitaciones).map(celda => celda.textContent.trim());
+                  }
+                  for (var i = 0; i < filasLimitaciones.length; i++) {
+                    var celdasLimitaciones = filasLimitaciones[i].querySelectorAll('td');
+                    var filaDatosLimitaciones = {};
+                    for (var j = 0; j < celdasLimitaciones.length; j++) {
+                      var contenidoLimitaciones = celdasLimitaciones[j].textContent.trim();
+                      filaDatosLimitaciones[nombresColumnasLimitaciones[j]] = contenidoLimitaciones;
+                    }
+                    datosLimitaciones.push(filaDatosLimitaciones);
+                  }
+
+                }
+                console.log('Datos Limitaciones:', datosLimitaciones);
+
+                var tablaPropietario = document.getElementById('ConsultarAutomotorForm:pagedTablePropietario');
+                var datosPropietario = [];
+
+                if (tablaPropietario) {
+                  var filasPropietario = tablaPropietario.querySelectorAll('tr.row, tr.row_odd');
+                  var encabezadoPropietario = tablaPropietario.querySelector('thead');
+                  var nombresColumnasPropietario = [];
+                  if (encabezadoPropietario) {
+                    var celdasEncabezadoPropietario = encabezadoPropietario.querySelectorAll('th');
+                    nombresColumnasPropietario = Array.from(celdasEncabezadoPropietario).map(celda => celda.textContent.trim());
+                  }
+                  for (var i = 0; i < filasPropietario.length; i++) {
+                    var celdasPropietario = filasPropietario[i].querySelectorAll('td');
+                    var filaDatosPropietario = {};
+                    for (var j = 0; j < celdasPropietario.length; j++) {
+                      var contenidoPropietario = celdasPropietario[j].textContent.trim();
+                      filaDatosPropietario[nombresColumnasPropietario[j]] = contenidoPropietario;
+                    }
+                    datosPropietario.push(filaDatosPropietario);
+                  }
+                }
+                console.log('Datos Propietario:', datosPropietario);
+
+                //historial vehículos
+                var tablaTramites = document.getElementById('historialVehiculos:tablaTramitesAutomotor');
+                var historialTramites = [];
+                  if (tablaTramites) {
+                    var filasTramites = tablaTramites.querySelectorAll('tr.row, tr.row_odd');
+                    var encabezadoTramites = tablaTramites.querySelector('thead');
+                    var nombresColumnasTramites = [];
+                    if (encabezadoTramites) {
+                      var celdasEncabezadoTramites = encabezadoTramites.querySelectorAll('th');
+                      nombresColumnasTramites = Array.from(celdasEncabezadoTramites).map(celda => celda.textContent.trim());
+                    }
+                    for (var i = 0; i < filasTramites.length; i++) {
+                      var celdasTramites = filasTramites[i].querySelectorAll('td');
+                      var filaDatosTramites = {};
+                      for (var j = 0; j < celdasTramites.length; j++) {
+                        var contenidoTramites = celdasTramites[j].textContent.trim();
+                        filaDatosTramites[nombresColumnasTramites[j]] = contenidoTramites;
+                      }
+                      historialTramites.push(filaDatosTramites);
+                    }
+                  }
+                  console.log('Datos Trámites:', historialTramites);
+                  if (Object.keys(datosBasicos).length > 0 &&
+                  Object.keys(infoVehiculo).length > 0 
+                  ) {
+              
+                  // Enviar los datos de vuelta al contexto del evento
+                  chrome.runtime.sendMessage({
+                    datosBasicos: datosBasicos,
+                    infoVehiculo: infoVehiculo,
+                    datosSoat: datosSoat,
+                    datosRevisionTM: datosRevisionTM,
+                    datosCertificaciones: datosCertificaciones,
+                    datosGravamenes: datosGravamenes,
+                    datosLimitaciones: datosLimitaciones,
+                    datosPropietario: datosPropietario,
+                    historialTramites: historialTramites,
+                  });
+                }else {
+                  if(
+                    historialTramites.length > 0){
+                      chrome.runtime.sendMessage({
+                        historialTramites: historialTramites,
+                      });
+                  }
+                }
+
             },
           });
 
@@ -340,10 +374,11 @@ window.addEventListener("message", function (event) {
               datosGravamenes: message.datosGravamenes,
               datosLimitaciones: message.datosLimitaciones,
               datosPropietario: message.datosPropietario,
+              historialTramites: message.historialTramites,
             };
             window.frames[0].postMessage(JSON.stringify(platesData), "*");
           });
-        }, 3000);
+       // }, 500);
       }
     });
 
@@ -352,7 +387,7 @@ window.addEventListener("message", function (event) {
         console.log(
           "Página recargada. Esperando antes de buscar el botón 'Generar Historial'..."
         );
-        setTimeout(function () {
+        //setTimeout(function () {
           // console.log("Espera completada. Guardando contenido de la consulta en localStorage...");
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
@@ -368,48 +403,50 @@ window.addEventListener("message", function (event) {
                 "ConsultarAutomotorForm:btnAction2"
               );
               if (generarHistorialButton) {
-                //generarHistorialButton.click();
+                generarHistorialButton.click();
                 console.log("Botón 'Generar Historial' presionado.");
               }
             },
           });
-        }, 3000);
+       // }, 6000);
       }
     });
 
     
-    chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    /*chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
         console.log("Página recargada. Guardando historial de vehículos");
         setTimeout(function () {
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
             function: function () {
+
               var tablaTramites = document.getElementById('historialVehiculos:tablaTramitesAutomotor');
               var historialTramites = [];
-              if (tablaTramites) {
-                var filasTramites = tablaTramites.querySelectorAll('tr.row, tr.row_odd');
-                var encabezadoTramites = tablaTramites.querySelector('thead');
-                var nombresColumnasTramites = [];
-                if (encabezadoTramites) {
-                  var celdasEncabezadoTramites = encabezadoTramites.querySelectorAll('th');
-                  nombresColumnasTramites = Array.from(celdasEncabezadoTramites).map(celda => celda.textContent.trim());
-                }
-                for (var i = 0; i < filasTramites.length; i++) {
-                  var celdasTramites = filasTramites[i].querySelectorAll('td');
-                  var filaDatosTramites = {};
-                  for (var j = 0; j < celdasTramites.length; j++) {
-                    var contenidoTramites = celdasTramites[j].textContent.trim();
-                    filaDatosTramites[nombresColumnasTramites[j]] = contenidoTramites;
+                if (tablaTramites) {
+                  var filasTramites = tablaTramites.querySelectorAll('tr.row, tr.row_odd');
+                  var encabezadoTramites = tablaTramites.querySelector('thead');
+                  var nombresColumnasTramites = [];
+                  if (encabezadoTramites) {
+                    var celdasEncabezadoTramites = encabezadoTramites.querySelectorAll('th');
+                    nombresColumnasTramites = Array.from(celdasEncabezadoTramites).map(celda => celda.textContent.trim());
                   }
-                  historialTramites.push(filaDatosTramites);
+                  for (var i = 0; i < filasTramites.length; i++) {
+                    var celdasTramites = filasTramites[i].querySelectorAll('td');
+                    var filaDatosTramites = {};
+                    for (var j = 0; j < celdasTramites.length; j++) {
+                      var contenidoTramites = celdasTramites[j].textContent.trim();
+                      filaDatosTramites[nombresColumnasTramites[j]] = contenidoTramites;
+                    }
+                    historialTramites.push(filaDatosTramites);
+                  }
                 }
-              }
-              console.log('Datos Trámites:', historialTramites);
+                console.log('Datos Trámites:', historialTramites);
               
-              chrome.runtime.sendMessage({
-                historialTramites: historialTramites,
-              });
+                chrome.runtime.sendMessage({
+                  historialTramites: historialTramites,
+                });
+              
             },
           });
 
@@ -419,10 +456,10 @@ window.addEventListener("message", function (event) {
             };
             window.frames[0].postMessage(JSON.stringify(platesData), "*");
           });
-        }, 3000);
+        }, 1000);
       }
-    });
-    /*
+    });*/
+    
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
         console.log("Página recargada después de presionar 'Consultar Automotor'. Esperando antes de buscar el botón 'Consultar Automotor'...");
@@ -439,8 +476,8 @@ window.addEventListener("message", function (event) {
               }
             }
           });
-        }, 6000); 
+        }, 700); 
       }
-    });*/
+    });
   }
 });

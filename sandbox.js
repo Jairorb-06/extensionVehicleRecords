@@ -44,12 +44,18 @@ window.addEventListener("message", function(event) {
     const datosLimitaciones= datos.datosLimitaciones || {};
     const datosPropietario= datos.datosPropietario || {};
     
-    const historialTramites= datos.historialTramites || {};
+    const historialTramites= datos.historialTramites || [];;
 
-    // Enviar a Firestore
-    
-      const firestore = firebase.firestore();
-      
+    console.log("length", Object.keys(datosBasicos).length )
+    console.log("length history",  historialTramites.length > 0)
+    const firestore = firebase.firestore();
+   /* if (
+      (Object.keys(datosBasicos).length === 0 &&
+        Object.keys(infoVehiculo).length === 0) ||
+      historialTramites.length > 0
+    ) {*/
+    // Enviar a Firestore   
+    if (Object.keys(datosBasicos).length > 0 && Object.keys(infoVehiculo).length > 0) {
         const respuestasCollection = firestore.collection("informacion");
         respuestasCollection.add({
           datosBasicos: datosBasicos,
@@ -67,8 +73,10 @@ window.addEventListener("message", function(event) {
         .catch((error) => {
           console.error("Error al guardar la respuesta en Firestore:", error);
         });
-     
-     
+    }
+
+      if(historialTramites && historialTramites.length > 0){
+
         const historialCollection = firestore.collection("historial");
         historialCollection.add({
           historialTramites: historialTramites,
@@ -79,7 +87,12 @@ window.addEventListener("message", function(event) {
         .catch((error) => {
           console.error("Error al guardar la respuesta en Firestore:", error);
         });
-      
+      }else{
+        console.log("no hay datos de historial")
+      }
+    /*}else {
+      console.log("No hay datos para guardar en Firestore.");
+    }*/
     
   } catch (error) {
     console.error("Error al analizar el mensaje JSON:", error);
