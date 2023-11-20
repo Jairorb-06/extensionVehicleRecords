@@ -6,16 +6,16 @@ window.addEventListener("message", function (event) {
     document
       .getElementById("startAutomation")
       .addEventListener("click", function () {
-        console.log("Botón 'Iniciar Automatización' clickeado.");
+        //console.log("Botón 'Iniciar Automatización' clickeado.");
        chrome.tabs.query(
           { active: true, currentWindow: true },
           function (tabs) {
-            console.log("Extensión button clicked.");
+            //console.log("Extensión button clicked.");
 
             chrome.scripting.executeScript({
               target: { tabId: tabs[0].id },
               function: (platesData, currentIndex) => {
-                console.log("Detectando campo de entrada...");
+                //console.log("Detectando campo de entrada...");
                 const placas = platesData;
                 const input = document.getElementById(
                   "ConsultarAutomotorForm:automotorPlacaNumplaca"
@@ -33,7 +33,7 @@ window.addEventListener("message", function (event) {
                 });*/
         
                 if (input) {
-                  console.log("Campo de entrada encontrado.");
+                  //console.log("Campo de entrada encontrado.");
                    //console.log("placas ", platesData);
                   //let currentIndex = 0;
 
@@ -64,7 +64,7 @@ window.addEventListener("message", function (event) {
                           "ConsultarAutomotorForm:btnconsultarAutomotor"
                         );
                         buscarButton.click(); // Presiona el botón "Buscar"
-                        console.log("Button clicked");
+                        //console.log("Button clicked");
                         chrome.runtime.sendMessage({ currentIndex: currentIndex });
                        // chrome.runtime.sendMessage({ currentIndex: currentIndex, platesData: platesData });
                       }, 2000);
@@ -84,10 +84,9 @@ window.addEventListener("message", function (event) {
             chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
               if (message.currentIndex !== undefined) {
                 // Update the currentIndex and process the next plate
-                consultarAutomotorButtonClicked = false;
                 currentIndex = message.currentIndex;
                 console.log("currentIndex inc", currentIndex)
-                console.log("123 platesData",  platesData[currentIndex])
+                console.log("1_platesData",  platesData[currentIndex])
                 //sendResponse({ currentIndex: currentIndex, platesData: platesData });
                 /*const startAutomationButton = document.getElementById("startAutomation");
                 if (startAutomationButton) {
@@ -96,11 +95,12 @@ window.addEventListener("message", function (event) {
                   // startAutomationButtonClicked = true;  // Marcar que el botón ha sido clickeado
                 }*/
                 const startAutomationButton = document.getElementById("startAutomation");
-
+                
                 if (startAutomationButton) {
                   setTimeout(() => {
+                    consultarAutomotorButtonClicked = false;
                     startAutomationButton.click();
-                    console.log("Botón 'Iniciar Automatización' presionado después de 3 segundos.");
+                    //console.log("Botón 'Iniciar Automatización' presionado después de 3 segundos.");
                   }, 5000);
                 }
 
@@ -114,7 +114,7 @@ window.addEventListener("message", function (event) {
 
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
-        console.log("Página recargada. Guardando contenido de las tablas...");
+        //console.log("Página recargada. Guardando contenido de las tablas...");
         //setTimeout(function () {
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
@@ -137,8 +137,8 @@ window.addEventListener("message", function (event) {
                     }
                   }
                 }
-                console.log("Datos Básicos:", datosBasicos);
-                let placa = datosBasicos.Placa 
+                //console.log("Datos Básicos:", datosBasicos);
+                const placa = datosBasicos.Placa 
                
 
                 var tablaInfoVehiculo = document.getElementById("ConsultarAutomotorForm:pGridContentInputColumns2");
@@ -398,7 +398,7 @@ window.addEventListener("message", function (event) {
 
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
-        console.log("Página recargada. Esperando antes de buscar el botón 'Generar Historial'...");
+       // console.log("Página recargada. Esperando antes de buscar el botón 'Generar Historial'...");
         //setTimeout(function () {
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
@@ -408,7 +408,7 @@ window.addEventListener("message", function (event) {
               );
               if (generarHistorialButton) {
                 generarHistorialButton.click();
-                console.log("Botón 'Generar Historial' presionado.");
+               // console.log("Botón 'Generar Historial' presionado.");
               }
             },
           });
@@ -421,12 +421,12 @@ let consultarAutomotorButtonClicked = false;
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   if (changeInfo.status === "complete") {
-    console.log("Página recargada después de presionar 'Consultar Automotor'. Esperando antes de buscar el botón 'Consultar Automotor'...");
+   // console.log("Página recargada después de presionar 'Consultar Automotor'. Esperando antes de buscar el botón 'Consultar Automotor'...");
 
     // Check if the button has already been clicked
     if (!consultarAutomotorButtonClicked) {
       setTimeout(function () {
-        console.log("Espera completada. Buscando botón 'Consultar Automotor'...");
+        //console.log("Espera completada. Buscando botón 'Consultar Automotor'...");
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
           function: () => {
@@ -434,7 +434,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
             const consultarAutomotorButton = document.querySelector('table[id="apy_t0i26"]');
             if (consultarAutomotorButton) {
               consultarAutomotorButton.click();
-              console.log("Botón 'Consultar Automotor' presionado.");
+              //console.log("Botón 'Consultar Automotor' presionado.");
               // Set the flag to true to indicate that the button has been clicked
               consultarAutomotorButtonClicked = true;
             }
