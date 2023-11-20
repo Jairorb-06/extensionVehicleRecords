@@ -75,20 +75,26 @@ window.addEventListener("message", function (event) {
                   insertPlacaAndTab();
                 } else {
                   console.log("Campo de entrada no encontrado.");
+                  currentIndex ++;
+                  chrome.runtime.sendMessage({ currentIndex: currentIndex });
                 }
               },
               args: [platesData, currentIndex], // Pasa platesData como argumento
             });
 
             chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+
               if (message.currentIndex !== undefined) {
                 // Update the currentIndex and process the next plate
                 consultarAutomotorButtonClicked = false;
                 currentIndex = message.currentIndex;
                 console.log("currentIndex inc", currentIndex)
                 console.log("123 platesData",  platesData[currentIndex])
+
+                
                 //sendResponse({ currentIndex: currentIndex, platesData: platesData });
-                chrome.tabs.query(
+
+                /* chrome.tabs.query(
                   { active: true, currentWindow: true },
                   function (tabs) {
                     console.log("Extensión button clicked.");
@@ -150,12 +156,14 @@ window.addEventListener("message", function (event) {
                     
                   }
                 );
-
+ */
 
 
 
               }
             });
+
+            
           }
         );
 
@@ -368,6 +376,7 @@ window.addEventListener("message", function (event) {
                 // console.log('Datos Propietario:', datosPropietario);
 
                 //historial vehículos
+                let placa = datosBasicos.Placa
                 var tablaTramites = document.getElementById('historialVehiculos:tablaTramitesAutomotor');
                 var historialTramites = [];
                   if (tablaTramites) {

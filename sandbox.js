@@ -44,7 +44,7 @@ window.addEventListener("message", function(event) {
     const datosLimitaciones= datos.datosLimitaciones || {};
     const datosPropietario= datos.datosPropietario || {};
     
-    const historialTramites= datos.historialTramites || [];;
+    const historialTramites= datos.historialTramites || [];
 
     // console.log("length", Object.keys(datosBasicos).length )
     // console.log("length history",  historialTramites.length > 0)
@@ -115,6 +115,7 @@ async function fetchData() {
 
     const platesData = [];
     querySnapshot.forEach((doc) => {
+      
       // Supongamos que los datos se encuentran en un campo llamado "columnData"
       const columnData = doc.data().columnData;
 
