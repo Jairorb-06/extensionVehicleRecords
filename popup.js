@@ -75,9 +75,7 @@ window.addEventListener("message", function (event) {
 
                   insertPlacaAndTab();
                 } else {
-                  console.log("Campo de entrada no encontrado.");
-                  currentIndex ++;
-                  chrome.runtime.sendMessage({ currentIndex: currentIndex });
+                 // console.log("Campo de entrada no encontrado.");
                 }
               },
               args: [platesData, currentIndex], // Pasa platesData como argumento
@@ -104,7 +102,7 @@ window.addEventListener("message", function (event) {
                     consultarAutomotorButtonClicked = false;
                     startAutomationButton.click();
                     //console.log("Botón 'Iniciar Automatización' presionado después de 3 segundos.");
-                  }, 4000);
+                  }, 5000);
                 }
 
               }
@@ -413,7 +411,7 @@ window.addEventListener("message", function (event) {
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
        // console.log("Página recargada. Esperando antes de buscar el botón 'Generar Historial'...");
-        setTimeout(function () {
+       // setTimeout(function () {
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
             function: () => {
@@ -426,7 +424,7 @@ window.addEventListener("message", function (event) {
               }
             },
           });
-        }, 2000);
+       // }, 200);
       }
     });
 
