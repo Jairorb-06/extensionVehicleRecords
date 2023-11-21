@@ -28,7 +28,8 @@ const config = {
 };
 firebase.initializeApp(config);
 
-window.addEventListener("message", function(event) {
+let placaActual = '';
+window.addEventListener("message", async function(event) {
   //console.log("Respuesta recibida en sandbox.js:", event.data);
   try {
     // Parsear la cadena JSON
@@ -45,53 +46,90 @@ window.addEventListener("message", function(event) {
     const datosPropietario= datos.datosPropietario || {};
     
     const historialTramites= datos.historialTramites || [];
-    const placa = datos.placa || ''
-    console.log("_placas", placa)
+    const placa = datos.placa 
+    if (placa !== undefined) {
+      placaActual = placa;
+      //console.log("Nuevo valor de placa:", placaActual);
+    } else {
+      console.log("se conserva el valor actual:", placaActual);
+    }
     // console.log("length", Object.keys(datosBasicos).length )
     // console.log("length history",  historialTramites.length > 0)
     const firestore = firebase.firestore();
+
+   
+
+  const informacionCollection = await firestore.collection("informacion").get();
+  let placaEncontradaInformacion = false;
+  informacionCollection.forEach((doc) => {
+    const datos = doc.data();
+    if (datos.placa === placaActual) {
+      placaEncontradaInformacion = true;
+    }
+  });
+  console.log("placaEncontradaInformacion", placaEncontradaInformacion)
    /* if (
       (Object.keys(datosBasicos).length === 0 &&
         Object.keys(infoVehiculo).length === 0) ||
       historialTramites.length > 0
     ) {*/
-    // Enviar a Firestore   
-    if (Object.keys(datosBasicos).length > 0 && Object.keys(infoVehiculo).length > 0) {
-        const respuestasCollection = firestore.collection("informacion");
-        respuestasCollection.add({
-          datosBasicos: datosBasicos,
-          infoVehiculo: infoVehiculo,
-          datosSoat: datosSoat,
-          datosRevisionTM: datosRevisionTM,
-          datosCertificaciones:datosCertificaciones,
-          datosGravamenes:datosGravamenes,
-          datosLimitaciones: datosLimitaciones,
-          datosPropietario: datosPropietario,
-        })
-        .then((docRef) => {
-          console.log("Respuesta guardada en Firestore con ID:", docRef.id);
-        })
-        .catch((error) => {
-          console.error("Error al guardar la respuesta en Firestore:", error);
-        });
+    if (!placaEncontradaInformacion){
+      // Enviar a Firestore   
+      if (Object.keys(datosBasicos).length > 0 && Object.keys(infoVehiculo).length > 0) {
+          const respuestasCollection = firestore.collection("informacion");
+          respuestasCollection.add({
+            datosBasicos: datosBasicos,
+            infoVehiculo: infoVehiculo,
+            datosSoat: datosSoat,
+            datosRevisionTM: datosRevisionTM,
+            datosCertificaciones:datosCertificaciones,
+            datosGravamenes:datosGravamenes,
+            datosLimitaciones: datosLimitaciones,
+            datosPropietario: datosPropietario,
+            placa: placaActual,
+          })
+          .then((docRef) => {
+            console.log("Respuesta guardada en Firestore con ID:", docRef.id);
+          })
+          .catch((error) => {
+            console.error("Error al guardar la respuesta en Firestore:", error);
+          });
+      }
+    }else{
+      console.log("placa ya consultada!")
     }
 
-      if(historialTramites && historialTramites.length > 0){
+      const informacionHistorial = await firestore.collection("historial").get();
+      let placaEncontradaHistorial = false;
+      informacionHistorial.forEach((doc) => {
+        const datos = doc.data();
+        if (datos.placa === placaActual) {
+          placaEncontradaHistorial = true;
+        }
+      });
+      console.log("placa nHistorial", placaEncontradaHistorial)
+      if (!placaEncontradaHistorial){
+        if(historialTramites && historialTramites.length > 0){
 
-        const historialCollection = firestore.collection("historial");
-        historialCollection.add({
-          historialTramites: historialTramites,
-          placa: placa
-        })
-        .then((docRef) => {
-          console.log("Respuesta guardada en Firestore con ID:", docRef.id);
-        })
-        .catch((error) => {
-          console.error("Error al guardar la respuesta en Firestore:", error);
-        });
+          const historialCollection = firestore.collection("historial");
+          historialCollection.add({
+            historialTramites: historialTramites,
+            placa: placaActual
+          })
+          .then((docRef) => {
+            console.log("Respuesta guardada en Firestore con ID:", docRef.id);
+            
+          })
+          .catch((error) => {
+            console.error("Error al guardar la respuesta en Firestore:", error);
+          });
+        }else{
+          console.log("no hay datos de historial")
+        }
       }else{
-        console.log("no hay datos de historial")
+        console.log("historial de placa ya consultado")
       }
+    
     /*}else {
       console.log("No hay datos para guardar en Firestore.");
     }*/

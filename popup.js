@@ -89,7 +89,7 @@ window.addEventListener("message", function (event) {
                 // Update the currentIndex and process the next plate
                 currentIndex = message.currentIndex;
                 console.log("currentIndex inc", currentIndex)
-                console.log("1_platesData",  platesData[currentIndex])
+                //console.log("1_platesData",  platesData[currentIndex])
                 //sendResponse({ currentIndex: currentIndex, platesData: platesData });
                 /*const startAutomationButton = document.getElementById("startAutomation");
                 if (startAutomationButton) {
@@ -104,7 +104,7 @@ window.addEventListener("message", function (event) {
                     consultarAutomotorButtonClicked = false;
                     startAutomationButton.click();
                     //console.log("Botón 'Iniciar Automatización' presionado después de 3 segundos.");
-                  }, 5000);
+                  }, 4000);
                 }
 
               }
@@ -116,9 +116,10 @@ window.addEventListener("message", function (event) {
 
 
       });
-
+      
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
+       
         //console.log("Página recargada. Guardando contenido de las tablas...");
         //setTimeout(function () {
           chrome.scripting.executeScript({
@@ -326,7 +327,6 @@ window.addEventListener("message", function (event) {
 
                 //historial vehículos
                 //let placa = datosBasicos.Placa 
-               
                 var tablaTramites = document.getElementById('historialVehiculos:tablaTramitesAutomotor');
                 var historialTramites = [];
                   if (tablaTramites) {
@@ -348,11 +348,14 @@ window.addEventListener("message", function (event) {
                     }
                   }
                   // console.log('Datos Trámites:', historialTramites);
-                  console.log("_placa", placa)
+                  //console.log("_placa", placa)
+                  historialTramitesEnviado = true;
+                 
                   if (Object.keys(datosBasicos).length > 0 &&
                   Object.keys(infoVehiculo).length > 0 
                   ) {
               
+                    
                   // Enviar los datos de vuelta al contexto del evento
                   chrome.runtime.sendMessage({
                     datosBasicos: datosBasicos,
@@ -367,23 +370,23 @@ window.addEventListener("message", function (event) {
                     //historialTramites: historialTramites,
                   });
                 }else {
-                  if(
-                    historialTramites.length > 0){
+                  if(historialTramites.length > 0   ){
                       chrome.runtime.sendMessage({
                         historialTramites: historialTramites,
                        
                       });
+                      
                   }
                 }
 
             },
           });
-
+          let historialTramitesEnviado = false;
           chrome.runtime.onMessage.addListener(function (message) {
             // console.log("Datos básicos:", message.datosBasicos);
             // console.log("Información del vehículo:", message.infoVehiculo);
-            //  console.log("soartt", message)
-            // console.log("message historial", message.historialTramites)
+            // console.log("soartt", message.datosSoat)
+           
             const platesData = {
               datosBasicos: message.datosBasicos,
               infoVehiculo: message.infoVehiculo,
@@ -396,9 +399,13 @@ window.addEventListener("message", function (event) {
               historialTramites: message.historialTramites,
               placa: message.placa
             };
-            
-            window.frames[0].postMessage(JSON.stringify(platesData), "*");
+            if (!historialTramitesEnviado) {
+              window.frames[0].postMessage(JSON.stringify(platesData), "*");
+              historialTramitesEnviado = true;
+            }
+            //window.frames[0].postMessage(JSON.stringify(platesData), "*");
           });
+          
        // }, 500);
       }
     });
@@ -424,9 +431,12 @@ window.addEventListener("message", function (event) {
     });
 
     
+
+    
 let consultarAutomotorButtonClicked = false;
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  
   if (changeInfo.status === "complete") {
    // console.log("Página recargada después de presionar 'Consultar Automotor'. Esperando antes de buscar el botón 'Consultar Automotor'...");
 
@@ -448,7 +458,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
           }
         });
         consultarAutomotorButtonClicked = true;
-      }, 4000);
+        
+      }, 700);
     }
   }
 });
