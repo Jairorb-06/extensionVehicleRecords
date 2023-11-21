@@ -45,7 +45,8 @@ window.addEventListener("message", function(event) {
     const datosPropietario= datos.datosPropietario || {};
     
     const historialTramites= datos.historialTramites || [];
-
+    const placa = datos.placa || ''
+    console.log("_placas", placa)
     // console.log("length", Object.keys(datosBasicos).length )
     // console.log("length history",  historialTramites.length > 0)
     const firestore = firebase.firestore();
@@ -80,6 +81,7 @@ window.addEventListener("message", function(event) {
         const historialCollection = firestore.collection("historial");
         historialCollection.add({
           historialTramites: historialTramites,
+          placa: placa
         })
         .then((docRef) => {
           console.log("Respuesta guardada en Firestore con ID:", docRef.id);
@@ -109,7 +111,7 @@ async function fetchData() {
 
   try {
     // Consulta la colección "plates" de Firestore
-    const platesCollection = firestore.collection("plates");
+    const platesCollection = firestore.collection("Placas");
     const querySnapshot = await platesCollection.get();
     const local = {};
 
@@ -117,7 +119,7 @@ async function fetchData() {
     querySnapshot.forEach((doc) => {
       
       // Supongamos que los datos se encuentran en un campo llamado "columnData"
-      const columnData = doc.data().columnData;
+      const columnData = doc.data().placas;
 
       if (Array.isArray(columnData)) {
         for (const plate of columnData) {
@@ -126,7 +128,7 @@ async function fetchData() {
         // Después de obtener las placas
         window.parent.postMessage({ platesData }, "*");
 
-        // console.log("Placas obtenidas en sandbox.js:", platesData);
+         console.log("Placas", platesData);
       } else {
         console.log("No se encontraron datos de placas.");
       }

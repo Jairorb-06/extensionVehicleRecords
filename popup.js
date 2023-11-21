@@ -1,20 +1,21 @@
 window.addEventListener("message", function (event) {
   if (event.data.platesData) {
     const platesData = event.data.platesData;    
+    console.log("placas ", platesData);
     let currentIndex = 0;
     document
       .getElementById("startAutomation")
       .addEventListener("click", function () {
-        console.log("Botón 'Iniciar Automatización' clickeado.");
+        //console.log("Botón 'Iniciar Automatización' clickeado.");
        chrome.tabs.query(
           { active: true, currentWindow: true },
           function (tabs) {
-            console.log("Extensión button clicked.");
+            //console.log("Extensión button clicked.");
 
             chrome.scripting.executeScript({
               target: { tabId: tabs[0].id },
               function: (platesData, currentIndex) => {
-                console.log("Detectando campo de entrada...");
+                //console.log("Detectando campo de entrada...");
                 const placas = platesData;
                 const input = document.getElementById(
                   "ConsultarAutomotorForm:automotorPlacaNumplaca"
@@ -32,8 +33,8 @@ window.addEventListener("message", function (event) {
                 });*/
         
                 if (input) {
-                  console.log("Campo de entrada encontrado.");
-                   console.log("placas en popup.js", platesData[2]);
+                  //console.log("Campo de entrada encontrado.");
+                   //console.log("placas ", platesData);
                   //let currentIndex = 0;
 
                   function insertPlacaAndTab() {
@@ -63,7 +64,7 @@ window.addEventListener("message", function (event) {
                           "ConsultarAutomotorForm:btnconsultarAutomotor"
                         );
                         buscarButton.click(); // Presiona el botón "Buscar"
-                        console.log("Button clicked");
+                        //console.log("Button clicked");
                         chrome.runtime.sendMessage({ currentIndex: currentIndex });
                        // chrome.runtime.sendMessage({ currentIndex: currentIndex, platesData: platesData });
                       }, 2000);
@@ -86,79 +87,25 @@ window.addEventListener("message", function (event) {
 
               if (message.currentIndex !== undefined) {
                 // Update the currentIndex and process the next plate
-                consultarAutomotorButtonClicked = false;
                 currentIndex = message.currentIndex;
                 console.log("currentIndex inc", currentIndex)
-                console.log("123 platesData",  platesData[currentIndex])
-
-                
+                console.log("1_platesData",  platesData[currentIndex])
                 //sendResponse({ currentIndex: currentIndex, platesData: platesData });
-
-                /* chrome.tabs.query(
-                  { active: true, currentWindow: true },
-                  function (tabs) {
-                    console.log("Extensión button clicked.");
-            
-                    chrome.scripting.executeScript({
-                      target: { tabId: tabs[0].id },
-                      function: (platesData) => {
-                        console.log("Detectando campo de entrada...");
-                        const placas = platesData;
-                        const input = document.getElementById(
-                          "ConsultarAutomotorForm:automotorPlacaNumplaca"
-                        );
-                        if (input) {
-                          console.log("Campo de entrada encontrado.");
-                          console.log("placas en popup.js", platesData[2]);
-                          let currentIndex = 0;
-            
-                          function insertPlacaAndTab() {
-                            if (currentIndex < placas.length) {
-                              console.log("Insertando placa: " + placas[currentIndex]);
-                              input.value = placas[currentIndex];
-                              currentIndex++;
-                              const inputEvent = new Event("input", {
-                                bubbles: true,
-                                cancelable: true,
-                              });
-                              input.dispatchEvent(inputEvent);
-                              input.focus();
-                              const tabKeyCode = 9; // Código de tecla para "Tab"
-                              const tabEvent = new KeyboardEvent("keydown", {
-                                key: "Tab",
-                                keyCode: tabKeyCode,
-                                which: tabKeyCode,
-                                bubbles: true,
-                                cancelable: true,
-                              });
-                              input.dispatchEvent(tabEvent);
-            
-                              setTimeout(() => {
-                                const buscarButton = document.getElementById(
-                                  "ConsultarAutomotorForm:btnconsultarAutomotor"
-                                );
-                                buscarButton.click(); // Presiona el botón "Buscar"
-                                console.log("Button clicked");
-                              }, 2000);
-                            } else {
-                              console.log("Automatización completada!");
-                            }
-                          }
-            
-                          insertPlacaAndTab();
-                        } else {
-                          console.log("Campo de entrada no encontrado.");
-                        }
-                      },
-                      args: [platesData], // Pasa platesData como argumento
-                    });
-
-                    
-                  }
-                );
- */
-
-
+                /*const startAutomationButton = document.getElementById("startAutomation");
+                if (startAutomationButton) {
+                  startAutomationButton.click();
+                  console.log("Botón 'Iniciar Automatización' presionado después del console log 123.");
+                  // startAutomationButtonClicked = true;  // Marcar que el botón ha sido clickeado
+                }*/
+                const startAutomationButton = document.getElementById("startAutomation");
+                
+                if (startAutomationButton) {
+                  setTimeout(() => {
+                    consultarAutomotorButtonClicked = false;
+                    startAutomationButton.click();
+                    //console.log("Botón 'Iniciar Automatización' presionado después de 3 segundos.");
+                  }, 5000);
+                }
 
               }
             });
@@ -172,7 +119,7 @@ window.addEventListener("message", function (event) {
 
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
-        console.log("Página recargada. Guardando contenido de las tablas...");
+        //console.log("Página recargada. Guardando contenido de las tablas...");
         //setTimeout(function () {
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
@@ -195,7 +142,9 @@ window.addEventListener("message", function (event) {
                     }
                   }
                 }
-                // console.log("Datos Básicos:", datosBasicos);
+                //console.log("Datos Básicos:", datosBasicos);
+                const placa = datosBasicos.Placa 
+               
 
                 var tablaInfoVehiculo = document.getElementById("ConsultarAutomotorForm:pGridContentInputColumns2");
                 var infoVehiculo = {};
@@ -376,7 +325,8 @@ window.addEventListener("message", function (event) {
                 // console.log('Datos Propietario:', datosPropietario);
 
                 //historial vehículos
-                let placa = datosBasicos.Placa
+                //let placa = datosBasicos.Placa 
+               
                 var tablaTramites = document.getElementById('historialVehiculos:tablaTramitesAutomotor');
                 var historialTramites = [];
                   if (tablaTramites) {
@@ -398,6 +348,7 @@ window.addEventListener("message", function (event) {
                     }
                   }
                   // console.log('Datos Trámites:', historialTramites);
+                  console.log("_placa", placa)
                   if (Object.keys(datosBasicos).length > 0 &&
                   Object.keys(infoVehiculo).length > 0 
                   ) {
@@ -412,13 +363,15 @@ window.addEventListener("message", function (event) {
                     datosGravamenes: datosGravamenes,
                     datosLimitaciones: datosLimitaciones,
                     datosPropietario: datosPropietario,
-                    historialTramites: historialTramites,
+                    placa : placa
+                    //historialTramites: historialTramites,
                   });
                 }else {
                   if(
                     historialTramites.length > 0){
                       chrome.runtime.sendMessage({
                         historialTramites: historialTramites,
+                       
                       });
                   }
                 }
@@ -429,7 +382,8 @@ window.addEventListener("message", function (event) {
           chrome.runtime.onMessage.addListener(function (message) {
             // console.log("Datos básicos:", message.datosBasicos);
             // console.log("Información del vehículo:", message.infoVehiculo);
-            // console.log("soartt", message.datosSoat)
+            //  console.log("soartt", message)
+            // console.log("message historial", message.historialTramites)
             const platesData = {
               datosBasicos: message.datosBasicos,
               infoVehiculo: message.infoVehiculo,
@@ -440,7 +394,9 @@ window.addEventListener("message", function (event) {
               datosLimitaciones: message.datosLimitaciones,
               datosPropietario: message.datosPropietario,
               historialTramites: message.historialTramites,
+              placa: message.placa
             };
+            
             window.frames[0].postMessage(JSON.stringify(platesData), "*");
           });
        // }, 500);
@@ -449,8 +405,8 @@ window.addEventListener("message", function (event) {
 
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
-        console.log("Página recargada. Esperando antes de buscar el botón 'Generar Historial'...");
-        //setTimeout(function () {
+       // console.log("Página recargada. Esperando antes de buscar el botón 'Generar Historial'...");
+        setTimeout(function () {
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
             function: () => {
@@ -459,11 +415,11 @@ window.addEventListener("message", function (event) {
               );
               if (generarHistorialButton) {
                 generarHistorialButton.click();
-                console.log("Botón 'Generar Historial' presionado.");
+               // console.log("Botón 'Generar Historial' presionado.");
               }
             },
           });
-       // }, 6000);
+        }, 2000);
       }
     });
 
@@ -472,12 +428,12 @@ let consultarAutomotorButtonClicked = false;
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   if (changeInfo.status === "complete") {
-    console.log("Página recargada después de presionar 'Consultar Automotor'. Esperando antes de buscar el botón 'Consultar Automotor'...");
+   // console.log("Página recargada después de presionar 'Consultar Automotor'. Esperando antes de buscar el botón 'Consultar Automotor'...");
 
     // Check if the button has already been clicked
     if (!consultarAutomotorButtonClicked) {
       setTimeout(function () {
-        console.log("Espera completada. Buscando botón 'Consultar Automotor'...");
+        //console.log("Espera completada. Buscando botón 'Consultar Automotor'...");
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
           function: () => {
@@ -485,14 +441,14 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
             const consultarAutomotorButton = document.querySelector('table[id="apy_t0i26"]');
             if (consultarAutomotorButton) {
               consultarAutomotorButton.click();
-              console.log("Botón 'Consultar Automotor' presionado.");
+              //console.log("Botón 'Consultar Automotor' presionado.");
               // Set the flag to true to indicate that the button has been clicked
               consultarAutomotorButtonClicked = true;
             }
           }
         });
         consultarAutomotorButtonClicked = true;
-      }, 700);
+      }, 4000);
     }
   }
 });
