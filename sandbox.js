@@ -155,26 +155,34 @@ async function fetchData() {
 
     const platesData = [];
     querySnapshot.forEach((doc) => {
-      
-      // Supongamos que los datos se encuentran en un campo llamado "columnData"
-      const columnData = doc.data().placas;
+      const consulta = doc.data().consulta;
+      if (consulta === false) {
+        const columnData = doc.data().placas || doc.data().placasUbicabilidad;
+      console.log(columnData)        
+        if (Array.isArray(columnData)) {
+          /*
+          //iterar placa por placa
+          const filteredPlates = columnData.filter(plate => !plate.estado);
+          for (const plate of filteredPlates) {
+            platesData.push(plate);
+          } */        
+          for (const plate of columnData) {
+            platesData.push(plate);
+          }
+          // Después de obtener las placas
+          window.parent.postMessage({ platesData }, "*");
 
-      if (Array.isArray(columnData)) {
-        for (const plate of columnData) {
-          platesData.push(plate);
+          // console.log("Placas", platesData);
+        } else {
+          console.log("No se encontraron datos de placas.");
         }
-        // Después de obtener las placas
-        window.parent.postMessage({ platesData }, "*");
-
-         console.log("Placas", platesData);
-      } else {
-        console.log("No se encontraron datos de placas.");
       }
     });
   } catch (error) {
     console.error("Error al consultar la colección 'plates':", error);
   }
 }
+
 fetchData(); // Llama a la función para iniciar la consulta
 
 
