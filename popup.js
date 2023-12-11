@@ -1,8 +1,11 @@
 window.addEventListener("message", function (event) {
   if (event.data.platesData) {
-    const platesData = event.data.platesData;    
+    const platesData = event.data.platesData;   
     console.log("placas ", platesData);
-    let currentIndex = 0;
+    //let currentIndex = 0;
+    const indexdb = event.data.indiceConsultado
+    let currentIndex = indexdb? indexdb:0;
+    console.log("_currentIndex",currentIndex)
     document
       .getElementById("startAutomation")
       .addEventListener("click", function () {
@@ -20,29 +23,17 @@ window.addEventListener("message", function (event) {
                 const input = document.getElementById(
                   "ConsultarAutomotorForm:automotorPlacaNumplaca"
                 );
-                /*chrome.runtime.onMessage.addListener(function (message) {
-                    console.log("escucha respuesta")
-                  if (message.currentIndex !== undefined && message.platesData) {
-                    currentIndex = message.currentIndex;
-                    placas = message.platesData;
-                    console.log("currentIndex inc 2", currentIndex);
-        
-                    // Trigger the next plate insertion or any other necessary action
-                    insertPlacaAndTab();
-                  }
-                });*/
         
                 if (input) {
                   //console.log("Campo de entrada encontrado.");
                    //console.log("placas ", platesData);
                   //let currentIndex = 0;
-
                   function insertPlacaAndTab() {
                     if (currentIndex < placas.length) {
                       
                       console.log("Insertando placa: " + placas[currentIndex]);
                       input.value = placas[currentIndex];
-                      currentIndex++;
+                      //currentIndex++;
                       const inputEvent = new Event("input", {
                         bubbles: true,
                         cancelable: true,
@@ -63,11 +54,12 @@ window.addEventListener("message", function (event) {
                         const buscarButton = document.getElementById(
                           "ConsultarAutomotorForm:btnconsultarAutomotor"
                         );
+                        currentIndex++;
+                        chrome.runtime.sendMessage({ currentIndex: currentIndex });
                         buscarButton.click(); // Presiona el botón "Buscar"
                         //console.log("Button clicked");
-                        chrome.runtime.sendMessage({ currentIndex: currentIndex });
                        // chrome.runtime.sendMessage({ currentIndex: currentIndex, platesData: platesData });
-                      }, 2000);
+                      }, 3000);
                     } else {
                       console.log("Automatización completada!");
                     }
@@ -95,6 +87,12 @@ window.addEventListener("message", function (event) {
                   console.log("Botón 'Iniciar Automatización' presionado después del console log 123.");
                   // startAutomationButtonClicked = true;  // Marcar que el botón ha sido clickeado
                 }*/
+                const indicePlaca = {
+                  currentIndex: message.currentIndex,
+                 
+                };
+                window.frames[0].postMessage(JSON.stringify(indicePlaca), "*");
+
                 const startAutomationButton = document.getElementById("startAutomation");
                 
                 if (startAutomationButton) {
@@ -384,7 +382,7 @@ window.addEventListener("message", function (event) {
             // console.log("Datos básicos:", message.datosBasicos);
             // console.log("Información del vehículo:", message.infoVehiculo);
             // console.log("soartt", message.datosSoat)
-           
+           console.log("current Index", currentIndex)
             const platesData = {
               datosBasicos: message.datosBasicos,
               infoVehiculo: message.infoVehiculo,

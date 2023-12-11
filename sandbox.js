@@ -29,6 +29,7 @@ const config = {
 firebase.initializeApp(config);
 
 let placaActual = '';
+let currentIndexdb='';
 window.addEventListener("message", async function(event) {
   //console.log("Respuesta recibida en sandbox.js:", event.data);
   try {
@@ -47,11 +48,19 @@ window.addEventListener("message", async function(event) {
     
     const historialTramites= datos.historialTramites || [];
     const placa = datos.placa 
+
+    const currentIndex = datos.currentIndex;
+    console.log("currentIndex db",currentIndex)
+
     if (placa !== undefined) {
       placaActual = placa;
       //console.log("Nuevo valor de placa:", placaActual);
     } else {
       console.log("se conserva el valor actual:", placaActual);
+    }
+
+    if(currentIndex !== undefined){
+      currentIndexdb = currentIndex
     }
     // console.log("length", Object.keys(datosBasicos).length )
     // console.log("length history",  historialTramites.length > 0)
@@ -129,6 +138,30 @@ window.addEventListener("message", async function(event) {
       }else{
         console.log("historial de placa ya consultado")
       }
+
+      const indicedb = firestore.collection("Placas");      
+      const query = indicedb.where("consulta", "==", false);      
+      query.get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const docRef = indicedb.doc(doc.id);
+            if (!isNaN(currentIndexdb)) {
+              docRef.update({
+                indiceConsultado: currentIndexdb
+              })
+                .then(() => {
+                  console.log("Documento actualizado exitosamente.");
+                })
+                .catch((error) => {
+                  console.error("Error al actualizar el documento:", error);
+                });
+            }
+          });
+        })
+        .catch((error) => {
+          console.error("Error al realizar la consulta:", error);
+        });
+      
     
     /*}else {
       console.log("No hay datos para guardar en Firestore.");
@@ -158,7 +191,9 @@ async function fetchData() {
       const consulta = doc.data().consulta;
       if (consulta === false) {
         const columnData = doc.data().placas || doc.data().placasUbicabilidad;
-      console.log(columnData)        
+        const indiceConsultado = doc.data().indiceConsultado - 1;
+
+      console.log( columnData)        
         if (Array.isArray(columnData)) {
           /*
           //iterar placa por placa
@@ -170,7 +205,7 @@ async function fetchData() {
             platesData.push(plate);
           }
           // Después de obtener las placas
-          window.parent.postMessage({ platesData }, "*");
+          window.parent.postMessage({ platesData, indiceConsultado }, "*");
 
           // console.log("Placas", platesData);
         } else {
