@@ -100,7 +100,7 @@ window.addEventListener("message", function (event) {
                     consultarAutomotorButtonClicked = false;
                     startAutomationButton.click();
                     //console.log("Botón 'Iniciar Automatización' presionado después de 3 segundos.");
-                  }, 5000);
+                  },5000);
                 }
 
               }
@@ -455,7 +455,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
         });
         consultarAutomotorButtonClicked = true;
         
-      }, 700);
+      }, 800);
     }
   }
 });

@@ -191,7 +191,7 @@ async function fetchData() {
       const consulta = doc.data().consulta;
       if (consulta === false) {
         const columnData = doc.data().placas || doc.data().placasUbicabilidad;
-        const indiceConsultado = doc.data().indiceConsultado - 1;
+        const indiceConsultado = doc.data().indiceConsultado ;
 
       console.log( columnData)        
         if (Array.isArray(columnData)) {
